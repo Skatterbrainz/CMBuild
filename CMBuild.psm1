@@ -1,3 +1,4 @@
+# This is semi-tested, PRE-RELEASE junk
 $Script:CMBuildVersion  = '1.0.0'
 $Script:CMBuildRegRoot1 = 'HKLM:\SOFTWARE\CMBUILD'
 $Script:CMBuildRegRoot2 = 'HKLM:\SOFTWARE\CMSITECONFIG'
