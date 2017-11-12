@@ -14,7 +14,6 @@
 .NOTES
     Read the associated XML to make sure the path and filename values
     all match up like you need them to.
-
 .EXAMPLE
     Invoke-CMSiteConfig -XmlFile .\cm_siteconfig.xml -Detailed
 .EXAMPLE

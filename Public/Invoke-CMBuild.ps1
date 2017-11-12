@@ -16,7 +16,7 @@
 .PARAMETER Override
 	[switch](optional) Choose package items to execute directly from GUI menu
 .NOTES
-	1.0.09 - 11/03/2017 - David Stein
+	1.0.0 - 11/04/2017 - David Stein
 
 	Read the associated XML to make sure the path and filename values
 	all match up like you need them to.
@@ -43,6 +43,7 @@ function Invoke-CMBuild {
 	)
 	Write-Host "CMBuild $CMBuildVersion" -ForegroundColor Cyan
 	$ScriptPath   = Get-ScriptDirectory
+	$RunTime1 = Get-Date
 	#if (-not(Test-Path $LogsFolder)) {New-Item -Path $LogsFolder -Type Directory}
 	$tsFile  = "$LogsFolder\cm_build`_$HostName`_transaction.log"
 	$logFile = "$LogsFolder\cm_build`_$HostName`_details.log"
@@ -52,7 +53,6 @@ function Invoke-CMBuild {
 
 	Write-Log -Category "info" -Message "******************* BEGIN $(Get-Date) *******************"
 	Write-Log -Category "info" -Message "script version = $CMBuildVersion"
-	Write-Log -Category "info" -Message "importing required modules"
 
 	Install-CMBuildModules
 	
