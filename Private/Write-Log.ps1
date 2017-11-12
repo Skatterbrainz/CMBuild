@@ -1,4 +1,15 @@
 <#
+.SYNOPSIS
+	Write Log output
+.DESCRIPTION
+	Write output to verbose (screen) or log file
+.PARAMETER Category
+	[string][optional] One of 'Info','Warning' or 'Error' 
+	Default is 'Info'
+.PARAMETER Message 
+	[string] Message to display or write to log file
+.EXAMPLE
+	Write-Log -Category 'Warning' -Message 'This is a message'
 #>
 
 function Write-Log {
@@ -13,5 +24,5 @@ function Write-Log {
     if ($Detailed) {
         Write-Host "DETAILED`: $(Get-Date -f 'yyyy-M-dd HH:mm:ss')`t$Category`t$Message" -ForegroundColor Cyan
     }
-	"$(Get-Date -f 'yyyy-M-dd HH:mm:ss')`t$Category`t$Message" | OutFile $CMLogFile
+	"$(Get-Date -f 'yyyy-M-dd HH:mm:ss')`t$Category`t$Message" | Out-File -FilePath $CMBuildLogFile
 }
