@@ -14,12 +14,26 @@ CMBuild and CMSiteConfig PowerShell Module
   
 ## Invoke-CMBuild
 
-### Parameter: -XmlFile (string) (required)
+### Parameter: -XmlFile 
 
-### Parameter: -NoCheck (switch) (optional)
+  * String / Required
+  * Path/Name for runtime XML template
+  * Local, HTTP, Drive-Letter or UNC path
 
-### Parameter: -NoReboot (switch) (optional)
+### Parameter: -NoCheck 
 
-### Parameter: -Detailed (switch) (optional)
+  * Switch / Optional
+
+### Parameter: -NoReboot
+
+  * Switch / Optional
+
+### Parameter: -Detailed 
+
+  * Switch / Optional
 
 ## Invoke-CMSiteConfig
+
+### Parameter: XmlFile
+
+  * String / Required
