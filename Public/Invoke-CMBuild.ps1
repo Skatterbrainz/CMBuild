@@ -16,7 +16,7 @@
 .PARAMETER Override
 	[switch](optional) Choose package items to execute directly from GUI menu
 .NOTES
-	1.0.0 - 11/04/2017 - David Stein
+	1.0.0 - 11/12/2017 - David Stein
 
 	Read the associated XML to make sure the path and filename values
 	all match up like you need them to.
@@ -42,11 +42,10 @@ function Invoke-CMBuild {
 			[switch] $Override
 	)
 	Write-Host "CMBuild $CMBuildVersion" -ForegroundColor Cyan
-	$ScriptPath   = Get-ScriptDirectory
+	$ScriptPath = Get-ScriptDirectory
 	$RunTime1 = Get-Date
-	#if (-not(Test-Path $LogsFolder)) {New-Item -Path $LogsFolder -Type Directory}
-	$tsFile  = "$LogsFolder\cm_build`_$HostName`_transaction.log"
-	$logFile = "$LogsFolder\cm_build`_$HostName`_details.log"
+	$tsFile   = "$LogsFolder\cm_build`_$HostName`_transaction.log"
+	$logFile  = "$LogsFolder\cm_build`_$HostName`_details.log"
 
 	try {stop-transcript -ErrorAction SilentlyContinue} catch {}
 	try {Start-Transcript -Path $tsFile -Force} catch {}
@@ -148,6 +147,18 @@ function Invoke-CMBuild {
 				}
 				$pkgcount += 1
 				Write-Log -Category "info" -Message "----------------------------------------------------"
+				if (Test-PendingReboot) {
+					if ($NoReboot) {
+						Write-Log -Category 'info' -Message 'a reboot is required - but NoReboot was requested.'
+						Write-Warning "A reboot is required but has been suppressed."
+					}
+					else {
+						Write-Log -Category 'info' -Message 'a reboot is requested.'
+						Invoke-CMxRestart -XmlFile $XmlFile
+						Write-Warning "A reboot is requested."
+						Restart-Computer
+					}
+				}
 			}
 			else {
 				Write-Warning "STOP! aborted at step [$pkgName] $(Get-Date)"

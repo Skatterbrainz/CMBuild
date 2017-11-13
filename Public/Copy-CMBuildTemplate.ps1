@@ -10,6 +10,8 @@
 	[optional] [string] Path to source cmsiteconfig xml template.
 .PARAMETER Type
 	[required] [string] Template option: cmbuild, cmsiteconfig, both.
+.PARAMETER NoScrub
+	[optional] [switch] Copy templates without clearing settings
 .NOTES
 	11/12/2017 - 1.0.0 - David Stein
 .EXAMPLE
@@ -28,7 +30,9 @@ function Copy-CMBuildTemplate {
 			[string] $Type,
 		[parameter(Mandatory=$False, HelpMessage="Location to save new templates")]
 			[ValidateNotNullOrEmpty()]
-			[string] $OutputPath = $PWD.Path
+			[string] $OutputPath = $PWD.Path,
+		[parameter(Mandatory=$False, HelpMessage="Copy templates without scrubbing information")]
+			[switch] $NoScrub
 	)
 	Write-Verbose "source1....... $Source1"
 	Write-Verbose "source2....... $Source2"
@@ -58,7 +62,12 @@ function Copy-CMBuildTemplate {
 		}
 		try {
 			Write-Verbose "scrubbing template data"
-			[xml]$newdata = Get-CMBuildCleanXML -XmlData $xmldata
+			if (-not $NoScrub) {
+				[xml]$newdata = Get-CMBuildCleanXML -XmlData $xmldata
+			}
+			else {
+				[xml]$newdata = $xmldata
+			}
 			Write-Verbose "saving new copy as $NewFile"
 			$newdata.Save($NewFile)
 			Write-Host "$NewFile created successfully" -ForegroundColor Cyan
@@ -93,8 +102,12 @@ function Copy-CMBuildTemplate {
 		}
 		try {
 			Write-Verbose "scrubbing template data"
-			#[xml]$newdata = $xmldata
-			[xml]$newdata = Get-CMSiteConfigCleanXML -XmlData $xmldata
+			if (-not $NoScrub) {
+				[xml]$newdata = Get-CMSiteConfigCleanXML -XmlData $xmldata
+			}
+			else {
+				[xml]$newdata = $xmldata
+			}
 			Write-Verbose "saving new copy as $NewFile"
 			$newdata.Save($NewFile)
 			Write-Host "$NewFile created successfully" -ForegroundColor Cyan
