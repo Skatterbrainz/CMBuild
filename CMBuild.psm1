@@ -6,6 +6,7 @@ $Script:CMBuildDefault1 = ''
 $Script:CMBuildDefault2 = ''
 $Script:CMBuildLogFile  = 'c:\windows\temp\cmbuild.log'
 $Script:CMConfigLogFile = 'c:\windows\temp\cmsiteconfig.log'
+$Script:SchemaVersion   = '1.3'
 
 $LogsFolder   = "c:\windows\temp\"
 
@@ -18,10 +19,9 @@ $Script:SuccessCodes = @(0,1003,3010,1605,1618,1641,1707)
 $HostFullName = "$($env:COMPUTERNAME).$($env:USERDNSDOMAIN)"
 
 $basekey        = 'HKLM:\SOFTWARE\CM_SITECONFIG'
-$Script:SchemaVersion  = '1.3'
 $HostName       = "$($env:COMPUTERNAME).$($env:USERDNSDOMAIN)"
-$tsFile         = "$LogsFolder\cm_siteconfig`_$HostName`_transaction.log"
-$logFile        = "$LogsFolder\cm_siteconfig`_$HostName`_details.log"
+$tsFile         = "$LogsFolder\cmsiteconfig`_$HostName`_transaction.log"
+$logFile        = "$LogsFolder\cmsiteconfig`_$HostName`_details.log"
 $AutoBoundaries = $False
 
 $(Get-ChildItem "$PSScriptRoot" -Recurse -Include "*.ps1").foreach{. $_.FullName}
