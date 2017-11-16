@@ -1,23 +1,26 @@
-<#
-.SYNOPSIS
-	Clone the default XML templates for custom needs
-.DESCRIPTION
-	Clones the default XML templates for cmbuild and cmsiteconfig
-	for use offline or publishing to a different online location.
-.PARAMETER Source1
-	[optional] [string] Path to source cmbuild xml template.
-.PARAMETER Source2
-	[optional] [string] Path to source cmsiteconfig xml template.
-.PARAMETER Type
-	[required] [string] Template option: cmbuild, cmsiteconfig, both.
-.PARAMETER NoScrub
-	[optional] [switch] Copy templates without clearing settings
-.NOTES
-	11/12/2017 - 1.0.0 - David Stein
-.EXAMPLE
-#>
-
+#requires -version 3
 function Copy-CMBuildTemplate {
+	<#
+	.SYNOPSIS
+		Clone the default XML templates for custom needs
+	.DESCRIPTION
+		Clones the default XML templates for cmbuild and cmsiteconfig
+		for use offline or publishing to a different online location.
+	.PARAMETER Source1
+		Path to source cmbuild xml template.
+	.PARAMETER Source2
+		Path to source cmsiteconfig xml template.
+	.PARAMETER Type
+		Template option: cmbuild, cmsiteconfig, both.
+	.PARAMETER NoScrub
+		Copy templates without clearing settings
+	.EXAMPLE
+		Copy-CMBuildTemplate -Type both -OutputPath '.\control'
+	.EXAMPLE
+		Copy-CMBuildTemplate -Type cmbuild -NoScrub
+	.NOTES
+		1.0.6 - 11/16/2017 - David Stein
+	#>
 	param (
 		[parameter(Mandatory=$False, HelpMessage="CMBuild XML source template")]
 			[ValidateNotNullOrEmpty()]
@@ -40,34 +43,14 @@ function Copy-CMBuildTemplate {
 	# CMBUILD
 	if (($Type -eq 'cmbuild') -or ($Type -eq 'both')) {
 		$NewFile = "$OutputPath\cmbuild.xml"
-		if ($Source1.StartsWith('http')) {
-			try {
-				[xml]$xmldata = (New-Object System.Net.WebClient).DownloadString($Source1)
-			}
-			catch {
-				Write-Error $_.Exception.Message
-				break
-			}
-			Write-Verbose "content imported from $Source1"
+		[xml]$XmlData = Get-CMxTemplateData -Source $Source1
+		if (!$NoScrub) {
+			[xml]$newData = Get-CMxTemplateScrubData -XmlData $XmlData
 		}
 		else {
-			try {
-				[xml]$xmldata = Get-Content -Path $Source1 -ErrorAction SilentlyContinue
-			}
-			catch {
-				Write-Error $_.Exception.Message
-				break
-			}
-			Write-Verbose "content imported from $Source1"
+			[xml]$newData = $XmlData
 		}
 		try {
-			Write-Verbose "scrubbing template data"
-			if (-not $NoScrub) {
-				[xml]$newdata = Get-CMBuildCleanXML -XmlData $xmldata
-			}
-			else {
-				[xml]$newdata = $xmldata
-			}
 			Write-Verbose "saving new copy as $NewFile"
 			$newdata.Save($NewFile)
 			Write-Host "$NewFile created successfully" -ForegroundColor Cyan

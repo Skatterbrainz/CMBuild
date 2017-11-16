@@ -1,32 +1,36 @@
 #requires -RunAsAdministrator
-#requires -version 3
-<#
-.SYNOPSIS
-	SCCM site server installation script
-.DESCRIPTION
-	Yeah, what he said.
-.PARAMETER XmlFile
-	[string](optional) Path and Name of XML input file
-.PARAMETER NoCheck
-	[switch](optional) Skip platform validation restrictions
-.PARAMETER NoReboot
-	[switch](optional) Suppress reboots until very end
-.PARAMETER Detailed
-	[switch](optional) Show verbose output
-.PARAMETER Override
-	[switch](optional) Choose package items to execute directly from GUI menu
-.NOTES
-	1.0.0 - 11/12/2017 - David Stein
-
-	Read the associated XML to make sure the path and filename values
-	all match up like you need them to.
-
-.EXAMPLE
-	Invoke-CMBuild -XmlFile .\cmbuild.xml -Verbose
-	Invoke-CMBuild -XmlFile .\cmbuild.xml -NoCheck -NoReboot -Detailed
-#>
+#requires -version 5
 
 function Invoke-CMBuild {
+	<#
+	.SYNOPSIS
+	SCCM site server installation script
+	.DESCRIPTION
+		Yeah, what he said.
+	.PARAMETER XmlFile
+		Path and Name of XML input file
+	.PARAMETER NoCheck
+		Skip platform validation restrictions
+	.PARAMETER NoReboot
+		Suppress reboots until very end
+	.PARAMETER Detailed
+		Show verbose output
+	.PARAMETER ShowMenu
+		Choose package items to execute directly from GUI menu
+	.PARAMETER Resume
+		Indicates a resumed process request
+	.EXAMPLE
+		Invoke-CMBuild -XmlFile .\cmbuild.xml -Verbose
+	.EXAMPLE
+		Invoke-CMBuild -XmlFile .\cmbuild.xml -NoCheck -NoReboot -Detailed
+	.EXAMPLE
+		Invoke-CMBuild -XmlFile .\cmbuild.xml -ShowMenu -Verbose
+	.NOTES
+		1.0.6 - 11/16/2017 - David Stein
+
+		Read the associated XML to make sure the path and filename values
+		all match up like you need them to.
+	#>
 	[CmdletBinding(SupportsShouldProcess=$True)]
 	param (
 		[parameter(Mandatory=$True, HelpMessage="Path or URI of XML input file")]
@@ -39,18 +43,20 @@ function Invoke-CMBuild {
 		[parameter(Mandatory=$False, HelpMessage="Display verbose output")]
 			[switch] $Detailed,
 		[parameter(Mandatory=$False, HelpMessage="Override control set from XML file")]
-			[switch] $Override
+			[switch] $ShowMenu,
+		[parameter(Mandatory=$False, HelpMessage="Resume from previous unfinished processing")]
+			[switch] $Resume
 	)
 	Write-Host "CMBuild $CMBuildVersion" -ForegroundColor Cyan
 	$ScriptPath = Get-ScriptDirectory
-	$RunTime1 = Get-Date
-	$tsFile   = "$LogsFolder\cm_build`_$HostName`_transaction.log"
-	$logFile  = "$LogsFolder\cm_build`_$HostName`_details.log"
-
+	$RunTime1   = Get-Date
+	$tsFile     = "$LogsFolder\cm_build`_$HostName`_transaction.log"
+	
 	try {stop-transcript -ErrorAction SilentlyContinue} catch {}
 	try {Start-Transcript -Path $tsFile -Force} catch {}
 
-	Write-Log -Category "info" -Message "******************* BEGIN $(Get-Date) *******************"
+	if ($Resume) {$OpenKey = 'RESUME'} else {$OpenKey = 'BEGIN'}
+	Write-Log -Category "info" -Message "******************* $OpenKey $(Get-Date) *******************"
 	Write-Log -Category "info" -Message "script version = $CMBuildVersion"
 
 	Install-CMBuildModules
@@ -68,7 +74,7 @@ function Invoke-CMBuild {
 
 	Set-CMxTaskCompleted -KeyName 'START' -Value $(Get-Date)
 
-	if ($Override) {
+	if ($ShowMenu) {
 		$controlset = $xmldata.configuration.packages.package | Out-GridView -Title "Select Packages to Run" -PassThru
 	}
 	else {
@@ -155,8 +161,9 @@ function Invoke-CMBuild {
 					else {
 						Write-Log -Category 'info' -Message 'a reboot is requested.'
 						Invoke-CMxRestart -XmlFile $XmlFile
-						Write-Warning "A reboot is requested."
-						Restart-Computer
+						Write-Warning "A reboot is requested. Reboot now."
+						Restart-Computer -Force
+						break
 					}
 				}
 			}

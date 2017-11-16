@@ -1,30 +1,31 @@
 #requires -RunAsAdministrator
-#requires -version 3
-<#
-.SYNOPSIS
-    SCCM site configuration script
-.DESCRIPTION
-    Yeah, what he said.
-.PARAMETER XmlFile
-    [string](optional) Path and Name of XML input file
-.PARAMETER Detailed
-    [switch](optional) Verbose output without using -Verbose
-.PARAMETER Override
-    [switch](optional) Allow override of Controls in XML file using GUI (gridview) selection at runtime
-.NOTES
-    Read the associated XML to make sure the path and filename values
-    all match up like you need them to.
-.EXAMPLE
-    Invoke-CMSiteConfig -XmlFile .\cm_siteconfig.xml -Detailed
-.EXAMPLE
-    Invoke-CMSiteConfig -XmlFile .\cm_siteconfig.xml -Override
-.EXAMPLE
-    Invoke-CMSiteConfig -XmlFile .\cm_siteconfig.xml -Detailed -Override
-.EXAMPLE
-	Invoke-CMSiteConfig -XmlFile .\cm_siteconfig.xml -Detailed -WhatIf
-#>
+#requires -version 5
 
 function Invoke-CMSiteConfig {
+	<#
+	.SYNOPSIS
+		SCCM site configuration script
+	.DESCRIPTION
+		Yeah, what he said.
+	.PARAMETER XmlFile
+		Path and Name of XML input file
+	.PARAMETER Detailed
+		Verbose output without using -Verbose
+	.PARAMETER ShowMenu
+		Override XML controls using GUI (gridview) selection at runtime
+	.EXAMPLE
+		Invoke-CMSiteConfig -XmlFile .\cmsiteconfig.xml -Detailed
+	.EXAMPLE
+		Invoke-CMSiteConfig -XmlFile .\cmsiteconfig.xml -ShowMenu
+	.EXAMPLE
+		Invoke-CMSiteConfig -XmlFile .\cmsiteconfig.xml -Detailed -ShowMenu
+	.EXAMPLE
+		Invoke-CMSiteConfig -XmlFile .\cmsiteconfig.xml -Detailed -WhatIf
+	.NOTES
+		1.0.6 - 11/16/2017 - David Stein
+		Read the associated XML to make sure the path and filename values
+		all match up like you need them to.
+	#>
 	[CmdletBinding(SupportsShouldProcess=$True)]
 	param (
 		[parameter(Mandatory=$True, HelpMessage="Path and name of XML input file")]
@@ -33,12 +34,12 @@ function Invoke-CMSiteConfig {
 		[parameter(Mandatory=$False, HelpMessage="Display verbose output")]
 			[switch] $Detailed,
 		[parameter(Mandatory=$False, HelpMessage="Override control set from XML file")]
-			[switch] $Override
+			[switch] $ShowMenu
 	)
 	Write-Host "CMSiteConfig $CMBuildVersion" -ForegroundColor Cyan
 	
 	try {stop-transcript -ErrorAction SilentlyContinue} catch {}
-	try {Start-Transcript -Path $tsFile -Force} catch {}
+	try {Start-Transcript -Path $Script:tsFile -Force} catch {}
 
 	Write-Host "------------------- BEGIN $(Get-Date) -------------------" -ForegroundColor Green
 
@@ -86,15 +87,13 @@ function Invoke-CMSiteConfig {
 	$Site = Get-CMSite -SiteCode $sitecode
 	Write-Log -Category "info" -Message "site version = $($site.Version)"
 
-	if ($Override) {
+	if ($ShowMenu) {
 		$controlset = $xmldata.configuration.cmsite.control.ci | Out-GridView -Title "Select Features to Run" -PassThru
 	}
 	else {
 		$controlset = $xmldata.configuration.cmsite.control.ci | Where-Object {$_.use -eq '1'}
 	}
-
 	Invoke-CMSiteConfigProcess -ControlSet $controlSet -DataSet $xmldata
-
 	Write-Log -Category "info" -Message "---------------------------------------------------"
 	Write-Log -Category "info" -Message "restore working path to user profile"
 	Set-Location -Path $env:USERPROFILE
