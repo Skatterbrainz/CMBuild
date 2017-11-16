@@ -25,13 +25,18 @@ for use offline or publishing to a different online location.
 
 ### -------------------------- EXAMPLE 1 --------------------------
 ```
+Copy-CMBuildTemplate -Type both -OutputPath '.\control'
+```
 
+### -------------------------- EXAMPLE 2 --------------------------
+```
+Copy-CMBuildTemplate -Type cmbuild -NoScrub
 ```
 
 ## PARAMETERS
 
 ### -Source1
-\[optional\] \[string\] Path to source cmbuild xml template.
+Path to source cmbuild xml template.
 
 ```yaml
 Type: String
@@ -46,7 +51,7 @@ Accept wildcard characters: False
 ```
 
 ### -Source2
-\[optional\] \[string\] Path to source cmsiteconfig xml template.
+Path to source cmsiteconfig xml template.
 
 ```yaml
 Type: String
@@ -61,7 +66,7 @@ Accept wildcard characters: False
 ```
 
 ### -Type
-\[required\] \[string\] Template option: cmbuild, cmsiteconfig, both.
+Template option: cmbuild, cmsiteconfig, both.
 
 ```yaml
 Type: String
@@ -91,7 +96,7 @@ Accept wildcard characters: False
 ```
 
 ### -NoScrub
-\[optional\] \[switch\] Copy templates without clearing settings
+Copy templates without clearing settings
 
 ```yaml
 Type: SwitchParameter
@@ -110,7 +115,7 @@ Accept wildcard characters: False
 ## OUTPUTS
 
 ## NOTES
-11/12/2017 - 1.0.0 - David Stein
+1.0.6 - 11/16/2017 - David Stein
 
 ## RELATED LINKS
 

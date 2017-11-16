@@ -8,61 +8,54 @@ schema: 2.0.0
 # Invoke-CMBuild
 
 ## SYNOPSIS
-{{Fill in the Synopsis}}
+SCCM site server installation script
 
 ## SYNTAX
 
 ```
-Invoke-CMBuild [-XmlFile] <String> [-NoCheck] [-NoReboot] [-Detailed] [-Override] [-Resume] [-WhatIf]
+Invoke-CMBuild [-XmlFile] <String> [-NoCheck] [-NoReboot] [-Detailed] [-ShowMenu] [-Resume] [-WhatIf]
  [-Confirm]
 ```
 
 ## DESCRIPTION
-{{Fill in the Description}}
+Yeah, what he said.
 
 ## EXAMPLES
 
-### Example 1
+### -------------------------- EXAMPLE 1 --------------------------
 ```
-PS C:\> {{ Add example code here }}
+Invoke-CMBuild -XmlFile .\cmbuild.xml -Verbose
 ```
 
-{{ Add example description here }}
+### -------------------------- EXAMPLE 2 --------------------------
+```
+Invoke-CMBuild -XmlFile .\cmbuild.xml -NoCheck -NoReboot -Detailed
+```
+
+### -------------------------- EXAMPLE 3 --------------------------
+```
+Invoke-CMBuild -XmlFile .\cmbuild.xml -ShowMenu -Verbose
+```
 
 ## PARAMETERS
 
-### -Confirm
-Prompts you for confirmation before running the cmdlet.
+### -XmlFile
+Path and Name of XML input file
 
 ```yaml
-Type: SwitchParameter
-Parameter Sets: (All)
-Aliases: cf
-
-Required: False
-Position: Named
-Default value: None
-Accept pipeline input: False
-Accept wildcard characters: False
-```
-
-### -Detailed
-Display verbose output
-
-```yaml
-Type: SwitchParameter
+Type: String
 Parameter Sets: (All)
 Aliases: 
 
-Required: False
-Position: Named
+Required: True
+Position: 1
 Default value: None
 Accept pipeline input: False
 Accept wildcard characters: False
 ```
 
 ### -NoCheck
-Skip platform validation checking
+Skip platform validation restrictions
 
 ```yaml
 Type: SwitchParameter
@@ -71,13 +64,13 @@ Aliases:
 
 Required: False
 Position: Named
-Default value: None
+Default value: False
 Accept pipeline input: False
 Accept wildcard characters: False
 ```
 
 ### -NoReboot
-Suppress reboots
+Suppress reboots until very end
 
 ```yaml
 Type: SwitchParameter
@@ -86,13 +79,13 @@ Aliases:
 
 Required: False
 Position: Named
-Default value: None
+Default value: False
 Accept pipeline input: False
 Accept wildcard characters: False
 ```
 
-### -Override
-Override control set from XML file
+### -Detailed
+Show verbose output
 
 ```yaml
 Type: SwitchParameter
@@ -101,13 +94,28 @@ Aliases:
 
 Required: False
 Position: Named
-Default value: None
+Default value: False
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -ShowMenu
+Choose package items to execute directly from GUI menu
+
+```yaml
+Type: SwitchParameter
+Parameter Sets: (All)
+Aliases: 
+
+Required: False
+Position: Named
+Default value: False
 Accept pipeline input: False
 Accept wildcard characters: False
 ```
 
 ### -Resume
-Resume from previous unfinished processing
+Indicates a resumed process request
 
 ```yaml
 Type: SwitchParameter
@@ -116,7 +124,7 @@ Aliases:
 
 Required: False
 Position: Named
-Default value: None
+Default value: False
 Accept pipeline input: False
 Accept wildcard characters: False
 ```
@@ -137,16 +145,16 @@ Accept pipeline input: False
 Accept wildcard characters: False
 ```
 
-### -XmlFile
-Path or URI of XML input file
+### -Confirm
+Prompts you for confirmation before running the cmdlet.
 
 ```yaml
-Type: String
+Type: SwitchParameter
 Parameter Sets: (All)
-Aliases: 
+Aliases: cf
 
-Required: True
-Position: 0
+Required: False
+Position: Named
 Default value: None
 Accept pipeline input: False
 Accept wildcard characters: False
@@ -154,14 +162,13 @@ Accept wildcard characters: False
 
 ## INPUTS
 
-### None
-
-
 ## OUTPUTS
 
-### System.Object
-
 ## NOTES
+1.0.6 - 11/16/2017 - David Stein
+
+Read the associated XML to make sure the path and filename values
+all match up like you need them to.
 
 ## RELATED LINKS
 

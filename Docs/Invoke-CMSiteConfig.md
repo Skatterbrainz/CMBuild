@@ -8,45 +8,58 @@ schema: 2.0.0
 # Invoke-CMSiteConfig
 
 ## SYNOPSIS
-{{Fill in the Synopsis}}
+SCCM site configuration script
 
 ## SYNTAX
 
 ```
-Invoke-CMSiteConfig [-XmlFile] <String> [-Detailed] [-Override] [-WhatIf] [-Confirm]
+Invoke-CMSiteConfig [-XmlFile] <String> [-Detailed] [-ShowMenu] [-WhatIf] [-Confirm]
 ```
 
 ## DESCRIPTION
-{{Fill in the Description}}
+Yeah, what he said.
 
 ## EXAMPLES
 
-### Example 1
+### -------------------------- EXAMPLE 1 --------------------------
 ```
-PS C:\> {{ Add example code here }}
+Invoke-CMSiteConfig -XmlFile .\cmsiteconfig.xml -Detailed
 ```
 
-{{ Add example description here }}
+### -------------------------- EXAMPLE 2 --------------------------
+```
+Invoke-CMSiteConfig -XmlFile .\cmsiteconfig.xml -ShowMenu
+```
+
+### -------------------------- EXAMPLE 3 --------------------------
+```
+Invoke-CMSiteConfig -XmlFile .\cmsiteconfig.xml -Detailed -ShowMenu
+```
+
+### -------------------------- EXAMPLE 4 --------------------------
+```
+Invoke-CMSiteConfig -XmlFile .\cmsiteconfig.xml -Detailed -WhatIf
+```
 
 ## PARAMETERS
 
-### -Confirm
-Prompts you for confirmation before running the cmdlet.
+### -XmlFile
+Path and Name of XML input file
 
 ```yaml
-Type: SwitchParameter
+Type: String
 Parameter Sets: (All)
-Aliases: cf
+Aliases: 
 
-Required: False
-Position: Named
+Required: True
+Position: 1
 Default value: None
 Accept pipeline input: False
 Accept wildcard characters: False
 ```
 
 ### -Detailed
-Display verbose output
+Verbose output without using -Verbose
 
 ```yaml
 Type: SwitchParameter
@@ -55,13 +68,13 @@ Aliases:
 
 Required: False
 Position: Named
-Default value: None
+Default value: False
 Accept pipeline input: False
 Accept wildcard characters: False
 ```
 
-### -Override
-Override control set from XML file
+### -ShowMenu
+Override XML controls using GUI (gridview) selection at runtime
 
 ```yaml
 Type: SwitchParameter
@@ -70,7 +83,7 @@ Aliases:
 
 Required: False
 Position: Named
-Default value: None
+Default value: False
 Accept pipeline input: False
 Accept wildcard characters: False
 ```
@@ -91,16 +104,16 @@ Accept pipeline input: False
 Accept wildcard characters: False
 ```
 
-### -XmlFile
-Path and name of XML input file
+### -Confirm
+Prompts you for confirmation before running the cmdlet.
 
 ```yaml
-Type: String
+Type: SwitchParameter
 Parameter Sets: (All)
-Aliases: 
+Aliases: cf
 
-Required: True
-Position: 0
+Required: False
+Position: Named
 Default value: None
 Accept pipeline input: False
 Accept wildcard characters: False
@@ -108,14 +121,12 @@ Accept wildcard characters: False
 
 ## INPUTS
 
-### None
-
-
 ## OUTPUTS
 
-### System.Object
-
 ## NOTES
+1.0.6 - 11/16/2017 - David Stein
+Read the associated XML to make sure the path and filename values
+all match up like you need them to.
 
 ## RELATED LINKS
 
