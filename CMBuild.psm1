@@ -1,9 +1,9 @@
-# This is semi-tested, PRE-RELEASE junk
-$Script:CMBuildVersion  = '1.0.6'
+$Script:CMBuildVersion  = '1.0.7'
 $Script:CMBuildRegRoot1 = 'HKLM:\SOFTWARE\CMBUILD'
 $Script:CMBuildRegRoot2 = 'HKLM:\SOFTWARE\CMSITECONFIG'
 $Script:CMBuildLogFile  = "$($env:SYSTEMROOT)\temp\cmbuild.log"
 $Script:CMConfigLogFile = "$($env:SYSTEMROOT)\temp\cmsiteconfig.log"
+$Script:CMxLogFile      = "$($env:SYSTEMROOT)\temp\cmbuild.log"
 $Script:SchemaVersion   = '1.3'
 $Script:LogsFolder      = "$($env:SYSTEMROOT)\temp\"
 $Script:HostName        = $env:COMPUTERNAME
