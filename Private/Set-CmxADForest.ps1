@@ -1,7 +1,23 @@
 function Set-CmxADForest {
+    <#
+    .SYNOPSIS
+    Short description
+    
+    .DESCRIPTION
+    Long description
+    
+    .PARAMETER DataSet
+    Parameter description
+    
+    .EXAMPLE
+    An example
+    
+    .NOTES
+    General notes
+    #>
     [CmdletBinding(SupportsShouldProcess=$True)]
     param (
-        [parameter(Mandatory=$True)]
+        [parameter(Mandatory=$True, HelpMessage="XML Data Set")]
         [ValidateNotNullOrEmpty()]
         $DataSet
     )

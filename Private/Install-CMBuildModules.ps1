@@ -1,16 +1,12 @@
-<#
-.SYNOPSIS
-	Load required modules
-.DESCRIPTION
-	Load required powershell modules
-.PARAMETER (none)
-.NOTES
-	11/12/2017 - 1.0.0 - David Stein
-.EXAMPLE
-	Install-CMBuildModules -Verbose
-#>
-
 function Install-CMBuildModules {
+	<#
+	.SYNOPSIS
+		Load required modules
+	.DESCRIPTION
+		Load required powershell modules
+	.EXAMPLE
+		Install-CMBuildModules -Verbose
+	#>
 	[CmdletBinding(SupportsShouldProcess=$True)]
 	param ()
 	Write-Log -Category 'Info' -Message 'Installing nuget provider'

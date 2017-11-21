@@ -1,14 +1,28 @@
-<#
-.NOTES
-	reference: http://get-carbon.org/Grant-Privilege.html
-#>
-
 function Set-CMxLocalAccountRights {
+	<#
+	.SYNOPSIS
+	Configure Local User Rights
+	
+	.DESCRIPTION
+	Configure Local User Account Security Access Rights
+	
+	.PARAMETER UserName
+	Name of local user account
+	
+	.PARAMETER Privileges
+	Security privileges
+	
+	.EXAMPLE
+	Set-CMxLocalAccountRights -UserName "sccmadmin" -Privileges 'SeServiceLogonRight'
+	
+	.NOTES
+	reference: http://get-carbon.org/Grant-Privilege.html
+	#>
 	param (
-		[parameter(Mandatory=$True)]
+		[parameter(Mandatory=$True, HelpMessage="User Account Name")]
 			[ValidateNotNullOrEmpty()]
 			[string] $UserName,
-		[parameter(Mandatory=$True)]
+		[parameter(Mandatory=$True, HelpMessage="Privilege Identifier")]
 			[ValidateNotNullOrEmpty()]
 			[string] $Privileges
 	)

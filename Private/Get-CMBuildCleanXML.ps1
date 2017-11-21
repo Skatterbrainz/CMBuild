@@ -1,22 +1,22 @@
-<#
-.SYNOPSIS
-Scrub XML data
-
-.DESCRIPTION
-Scrub template XML data to force user to manually update values
-
-.PARAMETER XmlData
-XML data obtained from source template
-
-.EXAMPLE
-[xml]$xdata = (New-Object System.Net.WebClient).DownloadString($Source1)
-$newxml = Get-CMBuildCleanXML -XmlData $xdata
-$newxml.Save('myfile.xml')
-
-.NOTES
-General notes
-#>
 function Get-CMBuildCleanXML {
+    <#
+    .SYNOPSIS
+    Scrub XML data
+
+    .DESCRIPTION
+    Scrub template XML data to force user to manually update values
+
+    .PARAMETER XmlData
+    XML data obtained from source template
+
+    .EXAMPLE
+    [xml]$xdata = (New-Object System.Net.WebClient).DownloadString($Source1)
+    $newxml = Get-CMBuildCleanXML -XmlData $xdata
+    $newxml.Save('myfile.xml')
+
+    .NOTES
+    General notes
+    #>
     [CmdletBinding()]
     param (
         [parameter(Mandatory=$True)]

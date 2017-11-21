@@ -1,4 +1,26 @@
 function Get-CMxInstallState {
+    <#
+    .SYNOPSIS
+    Get Install State of a Given Feature or Application
+    
+    .DESCRIPTION
+    Long description
+    
+    .PARAMETER PackageName
+    Name of control Package
+    
+    .PARAMETER RuleType
+    Rule type to process
+    
+    .PARAMETER RuleData
+    Rule data to process
+    
+    .EXAMPLE
+    An example
+    
+    .NOTES
+    General notes
+    #>
     param (
         [parameter(Mandatory=$True)]
             [ValidateNotNullOrEmpty()]

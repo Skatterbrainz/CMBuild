@@ -1,13 +1,31 @@
 function Get-CMxConfigData {
+    <#
+    .SYNOPSIS
+    Import XML Control Data
+    
+    .DESCRIPTION
+    Import XML Control Data
+    
+    .PARAMETER XmlFile
+    Path and Name of XML control file
+    
+    .EXAMPLE
+    Get-CMxConfigData -XmlFile 'https:\\myurl.contoso.nothing\path\filename.xml'
+    
+    .NOTES
+    General notes
+    #>
+
     param (
-        [parameter(Mandatory=$True)]
+        [parameter(Mandatory=$True, HelpMessage="Path to XML control file")]
             [ValidateNotNullOrEmpty()]
             [string] $XmlFile
     )
     Write-Host "Loading configuration data" -ForegroundColor Green
     if ($XmlFile.StartsWith("http")) {
         try {
-            [xml]$data = Invoke-RestMethod -Uri $XmlFile
+            [xml]$data = ((New-Object System.Net.WebClient).DownloadString($XmlFile))
+#            [xml]$data = Invoke-RestMethod -Uri $XmlFile
             Write-Output $data
         }
         catch {

@@ -1,4 +1,24 @@
 function Set-CMSiteConfigFolders {
+    <#
+    .SYNOPSIS
+    Create folders in ConfigMgr Console
+    
+    .DESCRIPTION
+    Create folders in ConfigMgr Console
+    
+    .PARAMETER SiteCode
+    Site code
+    
+    .PARAMETER DataSet
+    XML data set
+    
+    .EXAMPLE
+    Set-CMSiteConfigFolders -SiteCode 'P01' -DataSet $xmldata
+    
+    .NOTES
+    1.0.7 - 11/21/2017 - David Stein
+    #>
+
     [CmdletBinding(SupportsShouldProcess=$True)]
     param (
         [parameter(Mandatory=$True)]

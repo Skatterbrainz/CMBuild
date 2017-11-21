@@ -15,12 +15,18 @@ function Set-CMxRegKeys {
         $regName  = $item.name
         $regOrder = $item.order
         $reg = $null
+        Write-Log -Category "info" -Message "registry name...: $regName"
+        Write-Log -Category "info" -Message "registry order..: $regOrder"
         if ($regOrder -eq $Order) {
             $regPath = $item.path
             $regVal  = $item.value
             $regData = $item.data
+            Write-Log -Category "info" -Message "registry path...: $regPath"
+            Write-Log -Category "info" -Message "registry value..: $regVal"
+            Write-Log -Category "info" -Message "registry data...: $regData"
             switch ($regPath.substring(0,4)) {
                 'HKLM' {
+                    Write-Log -Category "info" -Message "registry hive...: Local Machine"
                     try {
                         $reg = [Microsoft.Win32.RegistryKey]::OpenBaseKey([Microsoft.Win32.RegistryHive]::LocalMachine,'default')
                         Write-Log -Category "info" -Message "opened registry hive $($regPath.Substring(0,4)) successfully"

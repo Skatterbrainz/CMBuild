@@ -14,9 +14,10 @@ function Import-CmxServerSettings {
         $setComm = $item.comment
         $setKey  = $item.key
         $setVal  = $item.value
+        Write-Log -Category "info" -Message "setting name: $setName"
+        Write-Log -Category "info" -Message "comment.....: $setComm"
         switch ($setName) {
             'CMSoftwareDistributionComponent' {
-                Write-Log -Category "info" -Message "setting name: $setName"
                 switch ($setKey) {
                     'NetworkAccessAccountName' {
                         Write-Log -Category "info" -Message "setting $setKey == $setVal"
