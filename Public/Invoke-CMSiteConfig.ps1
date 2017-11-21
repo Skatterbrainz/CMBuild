@@ -22,7 +22,7 @@ function Invoke-CMSiteConfig {
 	.EXAMPLE
 		Invoke-CMSiteConfig -XmlFile .\cmsiteconfig.xml -Detailed -WhatIf
 	.NOTES
-		1.0.6 - 11/16/2017 - David Stein
+		1.0.7 - 11/21/2017 - David Stein
 		Read the associated XML to make sure the path and filename values
 		all match up like you need them to.
 	#>
@@ -36,14 +36,13 @@ function Invoke-CMSiteConfig {
 		[parameter(Mandatory=$False, HelpMessage="Override control set from XML file")]
 			[switch] $ShowMenu
 	)
+	$RunTime1 = Get-Date
 	Write-Host "CMSiteConfig $CMBuildVersion" -ForegroundColor Cyan
-	
+	$Script:CMxLogFile = $Script:CMConfigLogFile
 	try {stop-transcript -ErrorAction SilentlyContinue} catch {}
 	try {Start-Transcript -Path $Script:tsFile -Force} catch {}
 
 	Write-Host "------------------- BEGIN $(Get-Date) -------------------" -ForegroundColor Green
-
-	$RunTime1 = Get-Date
 	Write-Log -Category "info" -Message "Script version.... $ScriptVersion"
 
 	Set-Location "$($env:USERPROFILE)\Documents"
