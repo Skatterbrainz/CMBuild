@@ -60,7 +60,7 @@ function Invoke-CMxSqlConfiguration {
                         $newMax = [math]::Round($newMax * 1024,0)
                         Write-Log -Category "info" -Message "SQL - adjusting max memory to $newMax MB" -LogFile $logfile
                         try {
-							Set-DbaMaxMemory -SqlServer $HostFullName -MaxMb $newMax | Out-Null
+                            Set-DbaMaxMemory -SqlServer $HostFullName -MaxMb $newMax | Out-Null
                             Write-Log -Category "info" -Message "SQL - maximum memory allocation is now: $newMax" -LogFile $logfile
                             Set-CMxTaskCompleted -KeyName 'SQLCONFIG' -Value $(Get-Date)
                             $result = 0
@@ -72,9 +72,9 @@ function Invoke-CMxSqlConfiguration {
                 }
                 else {
                     Write-Log -Category "info" -Message "configuring static memory limit" -LogFile $logfile
-					$curMax = (Get-DbaMaxMemory -SqlServer $HostFullName).SqlMaxMB
+                    $curMax = (Get-DbaMaxMemory -SqlServer $HostFullName).SqlMaxMB
                     try {
-						Set-DbaMaxMemory -SqlServer $HostFullName -MaxMb [int]$optData | Out-Null
+                        Set-DbaMaxMemory -SqlServer $HostFullName -MaxMb [int]$optData | Out-Null
                     }
                     catch {
                         Write-Log -Category "error" -Message "failed to set max memory" -Severity 3 -LogFile $logfile
