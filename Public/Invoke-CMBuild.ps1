@@ -26,7 +26,7 @@ function Invoke-CMBuild {
 	.EXAMPLE
 		Invoke-CMBuild -XmlFile .\cmbuild.xml -ShowMenu -Verbose
 	.NOTES
-		1.0.6 - 11/16/2017 - David Stein
+		1.0.7 - 01/22/2018 - David Stein
 
 		Read the associated XML to make sure the path and filename values
 		all match up like you need them to.
@@ -83,12 +83,19 @@ function Invoke-CMBuild {
 
 	if ($controlset) {
 		$project   = $xmldata.configuration.project
+		# IMPORTANT: requires cmbuild schame 1.4 or later !!!
+		$domain    = $xmldata.configuration.project.domain
+		$forest    = $xmldata.configuration.project.forest
+		$orgname   = $xmldata.configuration.project.orgname
 		$AltSource = $xmldata.configuration.sources.source | 
 			Where-Object {$_.name -eq 'WIN10'} | 
 				Select-Object -ExpandProperty path
 		Write-Log -Category "info" -Message "alternate windows source = $AltSource"
 		Write-Log -Category "info" -Message "----------------------------------------------------"
 		Write-Log -Category "info" -Message "project info....... $($project.comment)"
+		Write-Log -Category "info" -Message "AD forest.......... $forest"
+		Write-Log -Category "info" -Message "AD domain.......... $domain"
+		Write-Log -Category "info" -Message "Organization Name.. $orgname"
 
 		if (-not (Import-CMxFolders -DataSet $xmldata)) {
 			Write-Warning "error: failed to create folders (aborting)"
