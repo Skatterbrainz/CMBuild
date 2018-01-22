@@ -1,42 +1,64 @@
 function Import-CmxAccounts {
-    [CmdletBinding(SupportsShouldProcess=$True)]
+	<#
+	.SYNOPSIS
+	Create ConfigMgr Security Accounts
+	
+	.DESCRIPTION
+	Create ConfigMgr Security Accounts from XML input data
+	
+	.PARAMETER DataSet
+	XML data set
+	
+	.EXAMPLE
+	Import-CmxAccounts -DataSet $xmlData
+	
+	.NOTES
+	...
+	#>
+    [CmdletBinding()]
     param (
-        [parameter(Mandatory=$True)]
+        [parameter(Mandatory=$True, HelpMessage="XML Data Set")]
         [ValidateNotNullOrEmpty()]
-        $DataSet
+        [xml] $DataSet
     )
-	Write-Log -Category "info" -Message "------------------------------ Import-CmxAccounts -------------------------------"
+	Write-Log -Category "info" -Message "------------------------------ Import-CmxAccounts -------------------------------" -LogFile $logfile
     Write-Host "Configuring accounts" -ForegroundColor Green
     $result = $true
     $time1  = Get-Date
     foreach ($item in $DataSet.configuration.cmsite.accounts.account | Where-Object {$_.use -eq '1'}) {
         $acctName = $item.name
-        $acctPwd  = $item.password
-		Write-Log -Category "info" -Message "account: $acctName"
-        if (Get-CMAccount -UserName $acctName) {
-			Write-Log -Category "info" -Message "account already created"
+		$acctPwd  = $item.password
+		if ($domain -and ($domain.Length -gt 0)) {
+			$accountName = $acctName -replace '@DOMAIN@', $domain
 		}
 		else {
-			if (Test-CMxAdUser -UserName $acctName) {
+			$accountName = $acctName
+		}
+		Write-Log -Category "info" -Message "account: $accountName" -LogFile $logfile
+        if (Get-CMAccount -UserName $accountName) {
+			Write-Log -Category "info" -Message "account already created" -LogFile $logfile
+		}
+		else {
+			if (Test-CMxAdUser -UserName $accountName) {
 				try {
 					$pwd = ConvertTo-SecureString -String $acctPwd -AsPlainText -Force
 					New-CMAccount -UserName $acctName -Password $pwd -SiteCode $sitecode | Out-Null
-					Write-Log -Category "info" -Message "account added successfully: $acctName"
+					Write-Log -Category "info" -Message "account added successfully: $accountName" -LogFile $logfile
 				}
 				catch {
-					Write-Log -Category "error" -Message $_.Exception.Message
+					Write-Log -Category "error" -Message $_.Exception.Message -Severity 3 -LogFile $logfile
 					$Result = $False
 					break
 				}
 			}
 			else {
-				Write-Log -Category "error" -Message "account not found in domain: $acctName"
+				Write-Log -Category "error" -Message "account not found in domain: $accountName" -Severity 3 -LogFile $logfile
 				$result = $False
 				break
 			}
         }
-        Write-Verbose "- - - - - - - - - - - - - - - - - - - - - - - - - - - - - -"
+        Write-Verbose "- - - - - - - - - - - - - - - - - - - - - - - - - - - - - -" -LogFile $logfile
     } # foreach
-    Write-Log -Category info -Message "function runtime: $(Get-TimeOffset $time1)"
+    Write-Log -Category info -Message "function runtime: $(Get-TimeOffset $time1)" -LogFile $logfile
     Write-Output $result
 }
