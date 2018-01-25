@@ -1,7 +1,7 @@
 ---
 external help file: CMBuild-help.xml
 Module Name: CMBuild
-online version: 
+online version:
 schema: 2.0.0
 ---
 
@@ -14,7 +14,7 @@ Clone the default XML templates for custom needs
 
 ```
 Copy-CMBuildTemplate [[-Source1] <String>] [[-Source2] <String>] [-Type] <String> [[-OutputPath] <String>]
- [-NoScrub]
+ [-NoScrub] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -23,12 +23,12 @@ for use offline or publishing to a different online location.
 
 ## EXAMPLES
 
-### -------------------------- EXAMPLE 1 --------------------------
+### EXAMPLE 1
 ```
 Copy-CMBuildTemplate -Type both -OutputPath '.\control'
 ```
 
-### -------------------------- EXAMPLE 2 --------------------------
+### EXAMPLE 2
 ```
 Copy-CMBuildTemplate -Type cmbuild -NoScrub
 ```
@@ -41,11 +41,11 @@ Path to source cmbuild xml template.
 ```yaml
 Type: String
 Parameter Sets: (All)
-Aliases: 
+Aliases:
 
 Required: False
 Position: 1
-Default value: Https://raw.githubusercontent.com/Skatterbrainz/CM_Build/master/cm_build.xml
+Default value: None
 Accept pipeline input: False
 Accept wildcard characters: False
 ```
@@ -56,11 +56,11 @@ Path to source cmsiteconfig xml template.
 ```yaml
 Type: String
 Parameter Sets: (All)
-Aliases: 
+Aliases:
 
 Required: False
 Position: 2
-Default value: Https://raw.githubusercontent.com/Skatterbrainz/CM_Build/master/cm_siteconfig.xml
+Default value: None
 Accept pipeline input: False
 Accept wildcard characters: False
 ```
@@ -71,7 +71,7 @@ Template option: cmbuild, cmsiteconfig, both.
 ```yaml
 Type: String
 Parameter Sets: (All)
-Aliases: 
+Aliases:
 
 Required: True
 Position: 3
@@ -86,7 +86,7 @@ Location to save new templates
 ```yaml
 Type: String
 Parameter Sets: (All)
-Aliases: 
+Aliases:
 
 Required: False
 Position: 4
@@ -101,7 +101,7 @@ Copy templates without clearing settings
 ```yaml
 Type: SwitchParameter
 Parameter Sets: (All)
-Aliases: 
+Aliases:
 
 Required: False
 Position: Named
@@ -110,12 +110,15 @@ Accept pipeline input: False
 Accept wildcard characters: False
 ```
 
+### CommonParameters
+This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable, -InformationAction, -InformationVariable, -OutVariable, -OutBuffer, -PipelineVariable, -Verbose, -WarningAction, and -WarningVariable.
+For more information, see about_CommonParameters (http://go.microsoft.com/fwlink/?LinkID=113216).
+
 ## INPUTS
 
 ## OUTPUTS
 
 ## NOTES
-1.0.6 - 11/16/2017 - David Stein
+1.0.7 - 01/24/2018 - David Stein
 
 ## RELATED LINKS
-
