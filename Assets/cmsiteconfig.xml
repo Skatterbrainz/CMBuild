@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<configuration comment="ConfigMgr Site PX1 on CM01.contoso.com - 1.4.07 - 01/22/2018" schemaversion="1.4">
+<configuration comment="ConfigMgr Site PX1 on CM01.contoso.com - 1.4.0 - 01/24/2018" schemaversion="1.4">
     <cmsite sitecode="PX1" forest="contoso.com" domain="contoso" orgname="Contoso">
         <control comment="Enable configuration steps and specify sequence order">
 			<ci use="1" name="ENVIRONMENT" comment="platform environment checks" />
@@ -171,8 +171,11 @@
         <dpgroups comment="Distribution Point Groups">
             <dpgroup use="1" name="All Distribution Points" comment="All DP servers throughout the organization" />
 			<dpgroup use="1" name="All PXE DP Servers" comment="All PXE-enabled DP servers" />
-            <dpgroup use="1" name="Virginia DPs" comment="DP servers in Virginia" />
-            <dpgroup use="0" name="California DPs" comment="DP servers in California" />
+            <dpgroup use="0" name="NA Distribution Points" comment="DP servers in North America" />
+            <dpgroup use="0" name="EU Distribution Points" comment="DP servers in the EU" />
+			<dpgroup use="0" name="UK Distribution Points" comment="DP servers in the United Kingdom" />
+			<dpgroup use="0" name="APAC Distribution Points" comment="DP servers in Asia" />
+			<dpgroup use="0" name="SA Distribution Points" comment="DP servers in South America" />
             <dpgroup use="0" name="Azure DPs" comment="DP servers in Azure" />
         </dpgroups>
         <sitesystemroles>
@@ -192,7 +195,7 @@
                 </roleoptions>
             </sitesystemrole>
             <sitesystemrole use="1" name="scp" comment="Service Connection Point">
-                <roleoptions comment="">
+                <roleoptions comment="configure online mode">
                     <roleoption use="1" name="Mode" params="Online" />
                 </roleoptions>
             </sitesystemrole>
@@ -216,7 +219,7 @@
             </sitesystemrole>
             <sitesystemrole use="0" name="cmg" comment="Cloud Management Gateway">
                 <roleoptions comment="">
-                    <roleoption use="1" name="CloudManagementGatewayName" params="" />
+                    <roleoption use="0" name="CloudManagementGatewayName" params="" />
                 </roleoptions>
             </sitesystemrole>
             <sitesystemrole use="1" name="dp" comment="Distribution Point">
@@ -248,12 +251,12 @@
                 </roleoptions>
             </sitesystemrole>
             <sitesystemrole use="0" name="acwsp" comment="Application Catalog Web Service Point">
-                <roleoptions>
+                <roleoptions comment="">
                     <roleoption use="0" name="" params="" />
                 </roleoptions>
             </sitesystemrole>
             <sitesystemrole use="0" name="acwp" comment="Application Catalog Website Point">
-                <roleoptions>
+                <roleoptions comment="">
                     <roleoption use="1" name="CommuncationType" params="Https" />
                     <roleoption use="1" name="ClientConnectionType" params="Intranet" />
                     <roleoption use="0" name="OrganizationName" params="Contoso" />
@@ -261,6 +264,8 @@
                 </roleoptions>
             </sitesystemrole>
 			<sitesystemrole use="0" name="epp" comment="Endpoint Protection Point">
+				<roleoptions comment="">
+				</roleoptions>
 			</sitesystemrole>
         </sitesystemroles>
         <folders comment="Console Folders to create">
@@ -286,7 +291,7 @@
             <folder use="1" name="Google" path="Application" comment="Applications by Vendor: Google" />
             <folder use="1" name="Microsoft" path="Application" comment="Applications by Vendor: Microsoft" />
             <folder use="1" name="Utilities" path="Application" comment="Applications by Type: Utilities" />
-            <folder use="1" name="Tools" path="Application\Utilities" comment="Applications by Type: Tools" />
+            <folder use="0" name="Tools" path="Application\Utilities" comment="Applications by Type: Tools" />
         </folders>
         <queries comment="Custom queries">
 			<query use="1" name="Custom - Serial, MAC and Hostname" comment="Serial Number, MAC address and Hostname for all Devices" class="SMS_R_System" expression="select distinct SMS_R_System.Name, SMS_G_System_SYSTEM_ENCLOSURE.SerialNumber, SMS_G_System_NETWORK_ADAPTER.MACAddress, SMS_G_System_NETWORK_ADAPTER_CONFIGURATION.IPEnabled from SMS_R_System inner join SMS_G_System_SYSTEM_ENCLOSURE on SMS_G_System_SYSTEM_ENCLOSURE.ResourceID = SMS_R_System.ResourceId inner join SMS_G_System_NETWORK_ADAPTER on SMS_G_System_NETWORK_ADAPTER.ResourceID = SMS_R_System.ResourceId inner join SMS_G_System_NETWORK_ADAPTER_CONFIGURATION on SMS_G_System_NETWORK_ADAPTER_CONFIGURATION.ResourceID = SMS_R_System.ResourceId where SMS_G_System_NETWORK_ADAPTER_CONFIGURATION.IPEnabled = 1 and SMS_G_System_NETWORK_ADAPTER.MACAddress not like '' order by SMS_R_System.Name" />
@@ -304,9 +309,9 @@
 			<osimage use="0" name="Windows Server 2016 Datacenter" path="\\Fs1\SOURCES\ws2016dc\sources\install.wim" comment="Windows Server 2016 Datacenter" folder="OperatingSystemImage\Windows Server" />
         </osimages>
         <osinstallers comment="For in-place upgrades">
-            <osinstaller use="1" name="Windows 10 x64 Ent 1709" path="\\Fs1\SOURCES\W10x64ent1709" comment="Windows 10 x64 Enterprise 1709" version="1709.16299.190" folder="OperatingSystemInstaller\Windows Desktop" />
-			<osinstaller use="1" name="Windows 10 x64 Ent 1703" path="\\Fs1\SOURCES\W10x64ent1703" comment="Windows 10 x64 Enterprise 1703" version="1703.15063.540" folder="OperatingSystemInstaller\Windows Desktop" />
-            <osinstaller use="0" name="Windows Server 2016 Datacenter 1607" path="\\Fs1\SOURCES\ws2016dc" comment="Windows Server 2016 Datacenter" version="1607.14393.1593" folder="" />
+            <osinstaller use="1" name="Windows 10 x64 Ent 1709" path="\\FS1\SOURCES\W10x64ent1709" comment="Windows 10 x64 Enterprise 1709" version="1709.16299.190" folder="OperatingSystemInstaller\Windows Desktop" />
+			<osinstaller use="1" name="Windows 10 x64 Ent 1703" path="\\FS1\SOURCES\W10x64ent1703" comment="Windows 10 x64 Enterprise 1703" version="1703.15063.540" folder="OperatingSystemInstaller\Windows Desktop" />
+            <osinstaller use="0" name="Windows Server 2016 Datacenter 1607" path="\\FS1\SOURCES\ws2016dc" comment="Windows Server 2016 Datacenter" version="1607.14393.1593" folder="" />
         </osinstallers>
         <collections comment="Custom Collections">
             <collection use="1" name="Users - Title - Research Analysts" type="User" comment="Users by Job Title: Research Analyst" parent="All Users" folder="UserCollection\Inventory Organization" ruletype="query" rule="select SMS_R_USER.ResourceID,SMS_R_USER.ResourceType,SMS_R_USER.Name,SMS_R_USER.UniqueUserName,SMS_R_USER.WindowsNTDomain from SMS_R_User where sms_R_User.title = 'Research Analyst'" />
@@ -337,36 +342,40 @@
 			<collection use="1" name="Clients - Servers - SQL Server 2012" type="Device" comment="Servers with SQL Server 2012 installed" parent="All Desktop and Server Clients" folder="DeviceCollection\Inventory Software" ruletype="query" rule="select SMS_R_SYSTEM.ResourceID, SMS_R_SYSTEM.ResourceType, SMS_R_SYSTEM.Name, SMS_R_SYSTEM.SMSUniqueIdentifier, SMS_R_SYSTEM.ResourceDomainORWorkgroup, SMS_R_SYSTEM.Client from SMS_R_System where SMS_R_System.ResourceId in (select distinct SMS_G_System_ADD_REMOVE_PROGRAMS.ResourceID from SMS_G_System_ADD_REMOVE_PROGRAMS where SMS_G_System_ADD_REMOVE_PROGRAMS.DisplayName = 'Microsoft SQL Server 2012')" />
 			<collection use="1" name="Clients - Servers - SQL Server 2014" type="Device" comment="Servers with SQL Server 2014 installed" parent="All Desktop and Server Clients" folder="DeviceCollection\Inventory Software" ruletype="query" rule="select SMS_R_SYSTEM.ResourceID, SMS_R_SYSTEM.ResourceType, SMS_R_SYSTEM.Name, SMS_R_SYSTEM.SMSUniqueIdentifier, SMS_R_SYSTEM.ResourceDomainORWorkgroup, SMS_R_SYSTEM.Client from SMS_R_System where SMS_R_System.ResourceId in (select distinct SMS_G_System_ADD_REMOVE_PROGRAMS.ResourceID from SMS_G_System_ADD_REMOVE_PROGRAMS where SMS_G_System_ADD_REMOVE_PROGRAMS.DisplayName = 'Microsoft SQL Server 2014')" />
 			<collection use="1" name="Clients - Servers - SQL Server 2016" type="Device" comment="Servers with SQL Server 2016 installed" parent="All Desktop and Server Clients" folder="DeviceCollection\Inventory Software" ruletype="query" rule="select SMS_R_SYSTEM.ResourceID, SMS_R_SYSTEM.ResourceType, SMS_R_SYSTEM.Name, SMS_R_SYSTEM.SMSUniqueIdentifier, SMS_R_SYSTEM.ResourceDomainORWorkgroup, SMS_R_SYSTEM.Client from SMS_R_System where SMS_R_System.ResourceId in (select distinct SMS_G_System_ADD_REMOVE_PROGRAMS.ResourceID from SMS_G_System_ADD_REMOVE_PROGRAMS where SMS_G_System_ADD_REMOVE_PROGRAMS.DisplayName = 'Microsoft SQL Server 2016')" />
+			<collection use="1" name="Clients - Servers - SQL Server 2017" type="Device" comment="Servers with SQL Server 2017 installed" parent="All Desktop and Server Clients" folder="DeviceCollection\Inventory Software" ruletype="query" rule="select SMS_R_SYSTEM.ResourceID, SMS_R_SYSTEM.ResourceType, SMS_R_SYSTEM.Name, SMS_R_SYSTEM.SMSUniqueIdentifier, SMS_R_SYSTEM.ResourceDomainORWorkgroup, SMS_R_SYSTEM.Client from SMS_R_System where SMS_R_System.ResourceId in (select distinct SMS_G_System_ADD_REMOVE_PROGRAMS.ResourceID from SMS_G_System_ADD_REMOVE_PROGRAMS where SMS_G_System_ADD_REMOVE_PROGRAMS.DisplayName = 'Microsoft SQL Server 2017')" />
         </collections>
         <appcategories comment="Application Categories">
-            <appcategory use="1" name="IT" enabled="true" comment="" />
+            <appcategory use="1" name="Business" enabled="true" comment="" />
             <appcategory use="1" name="Developer" enabled="true" comment="" />
             <appcategory use="1" name="Engineering" enabled="true" comment="" />
             <appcategory use="1" name="Finance" enabled="true" comment="" />
             <appcategory use="1" name="General" enabled="true" comment="" />
+            <appcategory use="1" name="IT" enabled="true" comment="" />
+			<appcategory use="1" name="Marketing" enabled="true" comment="" />
+			<appcategory use="1" name="Media" enabled="true" comment="" />
             <appcategory use="1" name="Sales" enabled="true" comment="" />
         </appcategories>
         <applications comment="Applications">
 			<application use="1" name="7-Zip" publisher="7-Zip" version="17.01" categories="General" comment="File compression utility" folder="Utilities" keywords="file,zip,utility,archive,compression">
 				<deptypes comment="Deployment Types">
-					<deptype name="x64 installer" platform="64" source="\\Fs1\APPS\Packages\7-Zip\7z1701-x64.msi" options="auto" comment="64-bit installer" />
-					<deptype name="x86 installer" platform="32" source="\\Fs1\APPS\Packages\7-Zip\7z1701.msi" options="auto" comment="32-bit installer" />
+					<deptype name="x64 installer" platform="64" source="\\FS1\APPS\Packages\7-Zip\7z1701-x64.msi" options="auto" comment="64-bit installer" />
+					<deptype name="x86 installer" platform="32" source="\\FS1\APPS\Packages\7-Zip\7z1701.msi" options="auto" comment="32-bit installer" />
 				</deptypes>
 			</application>
 			<application use="0" name="Notepad++ 7.5.4" publisher="Notepad++" version="7.5.4" categories="Developer,Engineering" comment="Text and Code editor" folder="Utilities" keywords="editor,text,code,programming,script">
 				<deptypes comment="Deployment Types">
-					<deptype name="x64 installer" platform="64" source="\\Fs1\APPS\Packages\Notepad++\npp.7.5.4.installer.x64.exe" options="/s" uninstall="C:\Program Files\Notepad++\uninstall.exe" detect="registry:HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\Notepad++,DisplayVersion,-ge,7.5.4" requires="" comment="64-bit installer" />
-					<deptype name="x86 installer" platform="32" source="\\Fs1\APPS\Packages\Notepad++\npp.7.5.4.installer.exe" options="/s" uninstall="C:\Program Files\Notepad++\uninstall.exe" detect="registry:HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\Notepad++,DisplayVersion,-ge,7.5.4" requires="" comment="32-bit installer" />
+					<deptype name="x64 installer" platform="64" source="\\FS1\APPS\Packages\Notepad++\npp.7.5.4.installer.x64.exe" options="/s" uninstall="C:\Program Files\Notepad++\uninstall.exe" detect="registry:HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\Notepad++,DisplayVersion,-ge,7.5.4" requires="" comment="64-bit installer" />
+					<deptype name="x86 installer" platform="32" source="\\FS1\APPS\Packages\Notepad++\npp.7.5.4.installer.exe" options="/s" uninstall="C:\Program Files\Notepad++\uninstall.exe" detect="registry:HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\Notepad++,DisplayVersion,-ge,7.5.4" requires="" comment="32-bit installer" />
 				</deptypes>
 			</application>
 			<application use="0" name="Microsoft RDC Manager" publisher="Microsoft" version="2.7" categories="IT,Developer" comment="Remote Desktop Connection Manager" folder="Microsoft" keywords="remote,rdc,rdp,desktop">
 				<deptypes comment="Deployment Types">
-					<deptype name="x86 installer" platform="32" source="\\Fs1\APPS\Packages\Microsoft\RDC Manager\rdcman.msi" options="auto" comment="32-bit installer" />
+					<deptype name="x86 installer" platform="32" source="\\FS1\APPS\Packages\Microsoft\RDC Manager\rdcman.msi" options="auto" comment="32-bit installer" />
 				</deptypes>
 			</application>
 			<application use="0" name="Google Earth" publisher="Google" version="7.1" categories="Developer" comment="Mapping and visualization" folder="Google" keywords="google,earth,maps,model,3d">
 				<deptypes comment="Deployment Types">
-					<deptype name="x86 installer" platform="32" source="\\Fs1\APPS\Packages\Google\EarthPro\GoogleEarth7.1.5.1557.msi" options="auto" comment="32-bit installer" />
+					<deptype name="x86 installer" platform="32" source="\\FS1\APPS\Packages\Google\EarthPro\GoogleEarth7.1.5.1557.msi" options="auto" comment="32-bit installer" />
 				</deptypes>
 			</application>
 			<application use="0" name="VLC Player" publisher="VideoLAN" version="2.2.6" categories="General" comment="Media player" folder="Utilities" keywords="vlc,video,audio,media,player">
@@ -440,12 +449,14 @@
             <mtask use="1" name="Update Application Available Targeting" enabled="true" options="" />
         </mtasks>
         <accounts comment="Site System Accounts">
-            <account use="1" name="@DOMAIN@\sccmadmin" password="P@ssW0rd!" comment="Full site administrator" />
-            <account use="1" name="@DOMAIN@\cm-naa" password="P@ssW0rd!" comment="Network Access Account" />
-            <account use="1" name="@DOMAIN@\sql-svc" password="P@ssW0rd!" comment="SQL Server service account" />
+            <account use="1" name="CONTOSO\sccmadmin" password="P@ssW0rd!" comment="Full site administrator" />
+            <account use="1" name="CONTOSO\cm-naa" password="P@ssW0rd!" comment="Network Access Account" />
+			<account use="0" name="CONTOSO\cm-domjoin" password="P@ssW0rd!" comment="Domain join account for OSD" />
+			<account use="0" name="CONTOSO\cm-clientpush" password="P@ssW0rd!" comment="Client push installation account" />
+            <account use="1" name="CONTOSO\sql-svc" password="P@ssW0rd!" comment="SQL Server service account" />
         </accounts>
         <malwarepolicies comment="Endpoint Protection Malware Policies">
-            <malwarepolicy use="1" name="SCEP Standard Desktop Name" path="E:\CONFIGMGR\AdminConsole\XmlStorage\EPTemplates\SCEP_Standard_Desktop.xml" comment="" />
+            <malwarepolicy use="0" name="SCEP Standard Desktop Name" path="E:\CONFIGMGR\AdminConsole\XmlStorage\EPTemplates\SCEP_Standard_Desktop.xml" comment="" />
             <malwarepolicy use="0" name="SCEP_Default_CfgMgr" path="E:\CONFIGMGR\AdminConsole\XmlStorage\EPTemplates\SCEP_Default_CfgMgr.xml" comment="" />
             <malwarepolicy use="0" name="SCEP_High_Security" path="E:\CONFIGMGR\AdminConsole\XmlStorage\EPTemplates\SCEP_High_Security.xml" comment="" />
             <malwarepolicy use="0" name="SCEP_Performance_Optimized" path="E:\CONFIGMGR\AdminConsole\XmlStorage\EPTemplates\SCEP_Performance_Optimized.xml" comment="" />
