@@ -22,7 +22,7 @@ function Invoke-CMSiteConfig {
 	.EXAMPLE
 		Invoke-CMSiteConfig -XmlFile .\cmsiteconfig.xml -Detailed -WhatIf
 	.NOTES
-		1.0.7 - 01/22/2018 - David Stein
+		1.0.7 - 01/24/2018 - David Stein
 		Read the associated XML to make sure the path and filename values
 		all match up like you need them to.
 	#>
@@ -33,7 +33,7 @@ function Invoke-CMSiteConfig {
 			[string] $XmlFile,
 		[parameter(Mandatory=$False, HelpMessage="Display verbose output")]
 			[switch] $Detailed,
-		[parameter(Mandatory=$False, HelpMessage="Override control set from XML file")]
+		[parameter(Mandatory=$False, HelpMessage="Override control set from XML file using GridView menu selection")]
 			[switch] $ShowMenu
 	)
 	$RunTime1 = Get-Date
