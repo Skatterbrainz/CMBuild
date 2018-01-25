@@ -22,7 +22,7 @@ function Invoke-CMSiteConfig {
 	.EXAMPLE
 		Invoke-CMSiteConfig -XmlFile .\cmsiteconfig.xml -Detailed -WhatIf
 	.NOTES
-		1.0.7 - 11/21/2017 - David Stein
+		1.0.7 - 01/24/2018 - David Stein
 		Read the associated XML to make sure the path and filename values
 		all match up like you need them to.
 	#>
@@ -33,7 +33,7 @@ function Invoke-CMSiteConfig {
 			[string] $XmlFile,
 		[parameter(Mandatory=$False, HelpMessage="Display verbose output")]
 			[switch] $Detailed,
-		[parameter(Mandatory=$False, HelpMessage="Override control set from XML file")]
+		[parameter(Mandatory=$False, HelpMessage="Override control set from XML file using GridView menu selection")]
 			[switch] $ShowMenu
 	)
 	$RunTime1 = Get-Date
@@ -64,12 +64,13 @@ function Invoke-CMSiteConfig {
 		break
 	}
 	$sitecode = $xmldata.configuration.cmsite.sitecode
+	$orgname  = $xmldata.configuration.cmsite.orgname
 	if (($sitecode -eq "") -or (-not($sitecode))) {
 		Write-Warning "unable to load XML data from $xmlFile"
 		break
 	}
-	Write-Log -Category "info" -Message "site code = $sitecode"
-
+	Write-Log -Category "info" -Message "site code........... $sitecode"
+	Write-Log -Category "info" -Message "org name............ $orgname"
 	if ($sitecode -eq "") {
 		Write-Warning "site code could not be obtained"
 		break
@@ -84,7 +85,7 @@ function Invoke-CMSiteConfig {
 	Set-Location "$sitecode`:" 
 
 	$Site = Get-CMSite -SiteCode $sitecode
-	Write-Log -Category "info" -Message "site version = $($site.Version)"
+	Write-Log -Category "info" -Message "site version........ $($site.Version)"
 
 	if ($ShowMenu) {
 		$controlset = $xmldata.configuration.cmsite.control.ci | Out-GridView -Title "Select Features to Run" -PassThru

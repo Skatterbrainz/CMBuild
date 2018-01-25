@@ -1,6 +1,19 @@
 function Test-CMxAdSchema {
+	<#
+	.SYNOPSIS
+	Test if AD Schema has been extended for ConfigMgr
+
+	.DESCRIPTION
+	Returns $True if AD Schema has been extended for ConfigMgr
+	
+	.EXAMPLE
+	if (Test-CMxAdSchema) { Write-Host "Schema has been extended!" }
+	
+	.NOTES
+	...
+	#>
 	param ()
-	Write-Log -Category "info" -Message "------------------------------ Test-CMxAdSchema -------------------------------"
+	Write-Log -Category "info" -Message "------------------------------ Test-CMxAdSchema -------------------------------" -LogFile $logfile
 	Write-Host "Verifying for AD Schema extension" -ForegroundColor Green
 	$strFilter = "(&(objectClass=mSSMSSite)(Name=*))"
 	$objDomain = New-Object System.DirectoryServices.DirectoryEntry

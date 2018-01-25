@@ -26,7 +26,7 @@ function Invoke-CMBuild {
 	.EXAMPLE
 		Invoke-CMBuild -XmlFile .\cmbuild.xml -ShowMenu -Verbose
 	.NOTES
-		1.0.6 - 11/16/2017 - David Stein
+		1.0.7 - 01/24/2018 - David Stein
 
 		Read the associated XML to make sure the path and filename values
 		all match up like you need them to.
@@ -42,12 +42,17 @@ function Invoke-CMBuild {
 			[switch] $NoReboot,
 		[parameter(Mandatory=$False, HelpMessage="Display verbose output")]
 			[switch] $Detailed,
-		[parameter(Mandatory=$False, HelpMessage="Override control set from XML file")]
+		[parameter(Mandatory=$False, HelpMessage="Override control set from XML file using GridView menu selection")]
 			[switch] $ShowMenu,
 		[parameter(Mandatory=$False, HelpMessage="Resume from previous unfinished processing")]
 			[switch] $Resume
 	)
-	Write-Host "CMBuild $CMBuildVersion" -ForegroundColor Cyan
+	$ModuleData = Get-Module CMBuild
+    $ModuleVer  = $ModuleData.Version -join '.'
+	$ModulePath = $ModuleData.Path -replace 'CMBuild.psm1', ''
+	Write-Verbose "module path..... $ModulePath"
+	Write-Host "CMBuild $ModuleVer" -ForegroundColor Cyan
+
 	$ScriptPath = Get-ScriptDirectory
 	$RunTime1   = Get-Date
 	$tsFile     = "$LogsFolder\cm_build`_$HostName`_transaction.log"
@@ -83,12 +88,20 @@ function Invoke-CMBuild {
 
 	if ($controlset) {
 		$project   = $xmldata.configuration.project
+		# IMPORTANT: requires cmbuild schame 1.4 or later !!!
+		$domain    = $xmldata.configuration.project.domain
+		$forest    = $xmldata.configuration.project.forest
+		$orgname   = $xmldata.configuration.project.orgname
+		# ---------------------------------------------------
 		$AltSource = $xmldata.configuration.sources.source | 
 			Where-Object {$_.name -eq 'WIN10'} | 
 				Select-Object -ExpandProperty path
 		Write-Log -Category "info" -Message "alternate windows source = $AltSource"
 		Write-Log -Category "info" -Message "----------------------------------------------------"
 		Write-Log -Category "info" -Message "project info....... $($project.comment)"
+		Write-Log -Category "info" -Message "AD forest.......... $forest"
+		Write-Log -Category "info" -Message "AD domain.......... $domain"
+		Write-Log -Category "info" -Message "Organization Name.. $orgname"
 
 		if (-not (Import-CMxFolders -DataSet $xmldata)) {
 			Write-Warning "error: failed to create folders (aborting)"

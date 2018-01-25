@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<configuration schemaversion="1.3.06">
-	<project hostname="CM01.contoso.com" host="CM01" sitecode="P01" comment="Contoso SCCM primary site server build for CM01.contoso.com, 1.3.02 by DS 2017-09-23" />
+<configuration schemaversion="1.4.0">
+	<project hostname="CM01.contoso.com" host="CM01" sitecode="PX1" forest="contoso.com" domain="contoso" orgname="Contoso" comment="Contoso SCCM primary site server build for CM01.contoso.com, 1.4.0 by DS 2018-01-24" />
 	<sources comment="Installation Media Source Locations">
-		<source name="ADK" path="\\FS1\apps\CM_BUILD\ADK\cached" comment="ADK 1703" />
-		<source name="MDT" path="\\FS1\apps\CM_BUILD\MDT" comment="MDT 8443" />
+		<source name="ADK" path="\\FS1\apps\CM_BUILD\ADK\cached" comment="ADK 1709" />
+		<source name="MDT" path="\\FS1\apps\CM_BUILD\MDT" comment="MDT 8450" />
 		<source name="SQLSERVER" path="\\FS1\apps\CM_BUILD\SQL2016" comment="SQL Server 2016" />
 		<source name="SSMS" path="\\FS1\apps\CM_BUILD\SSMS" comment="SQL Server Management Studio 17.x" />
 		<source name="CONFIGMGR" path="\\FS1\apps\CM_BUILD\CONFIGMGR\SMSSETUP\BIN\X64" comment="Configuration Manager 1702" />
@@ -18,8 +18,8 @@
 	<packages comment="Controls the order and links of execution">
 		<package use="1" name="LOCALACCOUNTS" type="function" comment="Configure local accounts and groups" dependson="" />
 		<package use="1" name="SERVERROLES" type="feature" comment="Server Roles and Features" note="change feature to payload to invoke external file" />
-		<package use="1" name="ADK" type="payload" comment="Windows 10 ADK 1703" dependson="" />
-		<package use="1" name="MDT" type="payload" comment="Microsoft Deployment Toolkit 8443" dependson="" />
+		<package use="1" name="ADK" type="payload" comment="Windows 10 ADK 1709" dependson="" />
+		<package use="1" name="MDT" type="payload" comment="Microsoft Deployment Toolkit 8450" dependson="" />
 		<package use="1" name="SQLSERVER" type="payload" comment="SQL Server 2016" dependson="" />
 		<package use="1" name="SSMS" type="payload" comment="SQL Server Management Studio" dependson="" />
 		<package use="1" name="SQLCONFIG" type="function" comment="Configure SQL Server" dependson="" />
@@ -27,7 +27,7 @@
 		<package use="1" name="WSUSCONFIG" type="function" comment="WSUS Configuration" dependson="WSUS" />
 		<package use="1" name="CONFIGMGR" type="payload" comment="Configuration Manager 1702" dependson="WSUS" />
 		<package use="1" name="CMTOOLKIT" type="payload" comment="ConfigMgr Toolkit 2012 R2" dependson="CONFIGMGR" />
-		<package use="1" name="RCTOOLS" type="payload" comment="Recast RightClick Tools" dependson="CONFIGMGR" />
+		<package use="0" name="RCTOOLS" type="payload" comment="Recast RightClick Tools" dependson="CONFIGMGR" />
 	</packages>
     <payloads comment="Describes execution details for each package">
 		<payload name="SERVERROLES" file="roles.xml" params="" comment="only used if the package type is payload, must reside in same path as cm_build.xml" />
@@ -45,8 +45,9 @@
     <detections comment="Describes criteria to indicate install status">
 		<detect name="LOCALACCOUNTS" path="HKLM:\SOFTWARE\CM_BUILD\PROCESSED" value="LOCALACCOUNTS" type="synthetic" />
 		<detect name="SERVERROLES" path="HKLM:\SOFTWARE\CM_BUILD\PROCESSED" value="SERVERROLES" type="synthetic" />
-		<detect name="ADK" path="HKLM:\SOFTWARE\WOW6432Node\Microsoft\Windows Kits\Installed Roots" value="" type="automatic" />
-		<detect name="MDT" path="HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\{9547DE37-4A70-4194-97EA-ACC3E747254B}" value="" type="automatic" />
+		<detect name="ADK" path="HKLM:\SOFTWARE\WOW6432Node\Microsoft\Windows Kits\Installed Roots\10.0.16299.0" value="" type="automatic" comment="ADK 1709 only" />
+		<!--<detect name="MDT" path="HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\{9547DE37-4A70-4194-97EA-ACC3E747254B}" value="" type="automatic" comment="MDT 8443 only" />-->
+		<detect name="MDT" path="HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\{3BD2CBE2-862C-4C39-BD65-A4C1C2220160}" value="" type="automatic" comment="MDT 8450 only" />
 		<detect name="SQLSERVER" path="HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\Microsoft SQL Server 13" value="" type="automatic" />
 		<detect name="SSMS" path="HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\{510DB6E6-7CF0-4B25-A51E-3AED7E25D507}" value="" type="automatic" />
 		<detect name="SQLCONFIG" path="HKLM:\SOFTWARE\CM_BUILD\PROCESSED" value="SQLCONFIG" type="synthetic" />
@@ -174,7 +175,7 @@
 				<key name="__SECTION6" value="SABranchOptions" comment="do not modify" />
 				<key name="SAActive" value="1" comment="Software Assurance active" />
 				<key name="CurrentBranch" value="1" />
-				<key name="SAExpiration" value="2017-08-14 00:00:00.000" comment="SA initiation date" />
+				<key name="SAExpiration" value="2019-01-01 00:00:00.000" comment="SA expiration date" />
 				<key name="__SECTION7" value="HierarchyExpansionOption" comment="do not modify" />
             </keys>
         </file>
@@ -184,8 +185,8 @@
 		<feature use="1" name="WSUS" comment="WSUS role">UpdateServices-Services,UpdateServices-DB,UpdateServices-RSAT</feature>
 	</features>
 	<regkeys comment="Custom registry keys">
-		<regkey use="1" name="ADK1703Fix" order="after" path="HKLM:\SYSTEM\CurrentControlSet\Services\WIMMount" value="ImagePath" data="system32\drivers\wimmount.sys" comment="https://blogs.technet.microsoft.com/mniehaus/2017/05/16/quick-workaround-for-adk-1703-issue" />
-		<regkey use="1" name="SAMPLE" order="before" path="HKLM:\SOFTWARE\CM_BUILD\TEST" value="V1" data="123" comment="Sample" />
+		<regkey use="0" name="ADK1703Fix" order="after" path="HKLM:\SYSTEM\CurrentControlSet\Services\WIMMount" value="ImagePath" data="system32\drivers\wimmount.sys" comment="https://blogs.technet.microsoft.com/mniehaus/2017/05/16/quick-workaround-for-adk-1703-issue" />
+		<regkey use="0" name="SAMPLE" order="before" path="HKLM:\SOFTWARE\CM_BUILD\TEST" value="V1" data="123" comment="Sample" />
 	</regkeys>
 	<sqloptions comment="SQL Server configuration settings">
 		<sqloption use="1" name="SqlServerMemoryMax" db="ALL" param="80%" comment="Set memory to 80 percent of total" />

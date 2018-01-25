@@ -13,4 +13,5 @@ $Script:basekey         = 'HKLM:\SOFTWARE\CM_SITECONFIG'
 $Script:tsFile          = "$LogsFolder\cmsiteconfig`_$HostName`_transaction.log"
 $Script:RSJobName       = 'ResumeCMBuild'
 
-$(Get-ChildItem "$PSScriptRoot" -Recurse -Include "*.ps1").foreach{. $_.FullName}
+Get-ChildItem -Path (Join-Path -Path $PSScriptRoot -ChildPath 'Private'),(Join-Path -Path $PSScriptRoot -ChildPath 'Public') -Filter '*.ps1' |
+    ForEach-Object { . $_.FullName }
