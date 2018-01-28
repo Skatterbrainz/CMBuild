@@ -19,15 +19,13 @@ function Copy-CMBuildTemplate {
 	.EXAMPLE
 		Copy-CMBuildTemplate -Type cmbuild -NoScrub
 	.NOTES
-		1.0.6 - 11/16/2017 - David Stein
+		1.0.7 - 01/28/2018 - David Stein
 	#>
 	param (
 		[parameter(Mandatory=$False, HelpMessage="CMBuild XML source template")]
-			[ValidateNotNullOrEmpty()]
-			[string] $Source1 = 'https://raw.githubusercontent.com/Skatterbrainz/CM_Build/master/cm_build.xml',
+			[string] $Source1 = "",
 		[parameter(Mandatory=$False, HelpMessage="CMSiteConfig XML source template")]
-			[ValidateNotNullOrEmpty()]
-			[string] $Source2 = 'https://raw.githubusercontent.com/Skatterbrainz/CM_Build/master/cm_siteconfig.xml',
+			[string] $Source2 = "",
 		[parameter(Mandatory=$True, HelpMessage="Template copy option")]
 			[ValidateSet('cmbuild','cmsiteconfig','both')]
 			[string] $Type,
@@ -37,9 +35,23 @@ function Copy-CMBuildTemplate {
 		[parameter(Mandatory=$False, HelpMessage="Copy templates without scrubbing information")]
 			[switch] $NoScrub
 	)
-	Write-Verbose "source1....... $Source1"
-	Write-Verbose "source2....... $Source2"
-	Write-Verbose "outputpath.... $OutputPath"
+	Write-Verbose "source1.......... $Source1"
+	Write-Verbose "source2.......... $Source2"
+	Write-Verbose "outputpath....... $OutputPath"
+	$ModuleData = Get-Module CMBuild
+	$ModuleVer  = $ModuleData.Version -join '.'
+	$ModulePath = $ModuleData.Path -replace 'CMBuild.psm1', ''
+	Write-Verbose "module version... $ModuleVer"
+	Write-Verbose "module path...... $ModuelPath"
+	$AssetsPath = Join-Path -Path $ModulePath -ChildPath "Assets"
+	if ($Source1 -eq "") {
+		$Source1 = Join-Path -Path $AssetsPath -ChildPath "cmbuild.xml"
+	}
+	if ($Source2 -eq "") {
+		$Source2 = Join-Path -Path $AssetsPath -ChildPath "cmsiteconfig.xml"
+	}
+	Write-Verbose "source1.......... $Source1"
+	Write-Verbose "source2.......... $Source2"
 	# CMBUILD
 	if (($Type -eq 'cmbuild') -or ($Type -eq 'both')) {
 		$NewFile = "$OutputPath\cmbuild.xml"
