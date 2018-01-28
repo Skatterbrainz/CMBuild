@@ -33,7 +33,7 @@
 		<payload name="SERVERROLES" file="roles.xml" params="" comment="only used if the package type is payload, must reside in same path as cm_build.xml" />
 		<payload name="ADSCHEMA" file="extadsch.exe" params="" comment="AD Schema Extension" />
 		<payload name="ADK" file="adksetup.exe" params="/installpath E:\ADK /Features OptionId.DeploymentTools OptionId.WindowsPreinstallationEnvironment OptionId.ImagingAndConfigurationDesigner OptionId.UserStateMigrationTool /norestart /quiet /ceip off" comment="ADK" />
-		<payload name="MDT" file="MicrosoftDeploymentToolkit_x64.msi" params="/qb! /norestart /l*v c:\windows\temp\mdt_inst.log" comment="MDT" />
+		<payload name="MDT" file="MicrosoftDeploymentToolkit_x64.msi" params="INSTALLDIR=E:\MDT /qb! /norestart /l*v c:\windows\temp\mdt_inst.log" comment="MDT" />
 		<payload name="SQLSERVER" file="setup.exe" params="/ConfigurationFile=F:\CM_BUILD\sqlsetup.ini" comment="SQL Server" />
 		<payload name="SSMS" file="SSMS-Setup-ENU.exe" params="/install /quiet /norestart" comment="SQL Server Management Studio" />
 		<payload name="WSUSCONFIG" file="WsusUtil.exe" params="postinstall SQL_INSTANCE_NAME=@HOSTNAME@ CONTENT_DIR=F:\UPDATES" comment="WSUS configuration" />
