@@ -22,7 +22,7 @@ function Invoke-CMSiteConfig {
 	.EXAMPLE
 		Invoke-CMSiteConfig -XmlFile .\cmsiteconfig.xml -Detailed -WhatIf
 	.NOTES
-		1.0.7 - 01/24/2018 - David Stein
+		1.0.7 - 01/29/2018 - David Stein
 		Read the associated XML to make sure the path and filename values
 		all match up like you need them to.
 	#>

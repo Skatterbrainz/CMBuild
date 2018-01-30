@@ -55,9 +55,9 @@ function Copy-CMBuildTemplate {
 	# CMBUILD
 	if (($Type -eq 'cmbuild') -or ($Type -eq 'both')) {
 		$NewFile = "$OutputPath\cmbuild.xml"
-		[xml]$XmlData = Get-CMxTemplateData -Source $Source1
+		[xml]$XmlData = Get-CMBuildTemplateData -Source $Source1
 		if (!$NoScrub) {
-			[xml]$newData = Get-CMxTemplateScrubData -XmlData $XmlData
+			[xml]$newData = Get-CMBuildTemplateScrubData -XmlData $XmlData
 		}
 		else {
 			[xml]$newData = $XmlData
