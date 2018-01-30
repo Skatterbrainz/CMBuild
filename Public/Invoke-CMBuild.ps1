@@ -26,7 +26,7 @@ function Invoke-CMBuild {
 	.EXAMPLE
 		Invoke-CMBuild -XmlFile .\cmbuild.xml -ShowMenu -Verbose
 	.NOTES
-		1.0.7 - 01/24/2018 - David Stein
+		1.0.7 - 01/29/2018 - David Stein
 
 		Read the associated XML to make sure the path and filename values
 		all match up like you need them to.
@@ -38,8 +38,9 @@ function Invoke-CMBuild {
 			[string] $XmlFile,
 		[parameter(Mandatory=$False, HelpMessage="Skip platform validation checking")]
 			[switch] $NoCheck,
-		[parameter(Mandatory=$False, HelpMessage="Suppress reboots")]
-			[switch] $NoReboot,
+		[parameter(Mandatory=$False, HelpMessage="Prompt to initiate a required restart")]
+			[ValidateSet('Prompt','Auto')]
+			[string] $RestartMode = 'Prompt',
 		[parameter(Mandatory=$False, HelpMessage="Display verbose output")]
 			[switch] $Detailed,
 		[parameter(Mandatory=$False, HelpMessage="Override control set from XML file using GridView menu selection")]
@@ -167,12 +168,18 @@ function Invoke-CMBuild {
 				$pkgcount += 1
 				Write-Log -Category "info" -Message "----------------------------------------------------"
 				if (Test-PendingReboot) {
-					if ($NoReboot) {
-						Write-Log -Category 'info' -Message 'a reboot is required - but NoReboot was requested.'
-						Write-Warning "A reboot is required but has been suppressed."
+					Write-Log -Category "info" -Message "a pending restart has been detected"
+					Write-Log -Category "info" -Message "restartmode is set to: $RestartMod"
+					if ($RestartMode -eq 'Prompt') {
+						Write-Host "A restart is required before continiuing." -ForegroundColor Yellow
+						$go = Read-Host -Prompt "Restart computer now? (y/N)"
+						if ($go -eq 'Y') { 
+							Invoke-CMxRestart -XmlFile $XmlFile
+							Restart-Computer -Force
+							break
+						}
 					}
-					else {
-						Write-Log -Category 'info' -Message 'a reboot is requested.'
+					elseif ($RestartMode -eq 'Auto') {
 						Invoke-CMxRestart -XmlFile $XmlFile
 						Write-Warning "A reboot is requested. Reboot now."
 						Restart-Computer -Force
