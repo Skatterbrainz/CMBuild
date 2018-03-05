@@ -78,7 +78,7 @@ function Import-CmxApplications {
 				#$app = Get-CMApplication -Name $appName
 				$app | Move-CMObject -FolderPath "Application\$appFolder" | Out-Null
 			}
-            foreach ($depType in $appSet.deptypes.deptype) {
+            foreach ($depType in $item.deptypes.deptype) {
                 $depName   = $depType.name
                 $depSource = $depType.source
                 $depOpts   = $depType.options
@@ -107,10 +107,10 @@ function Import-CmxApplications {
                     Write-Log -Category "info" -Message "installer type: msi"
                     try {
                         if ($depCPU -eq '32') {
-                            Add-CMDeploymentType -ApplicationName $appName -AutoIdentifyFromInstallationFile -ForceForUnknownPublisher $true -InstallationFileLocation $depSource -MsiInstaller -DeploymentTypeName $depName -Force32BitInstaller $True
+                            Add-CMMsiDeploymentType -ApplicationName $appName -Force -ContentLocation $depSource -DeploymentTypeName $depName -Force32Bit
                         }
                         else {
-                            Add-CMDeploymentType -ApplicationName $appName -AutoIdentifyFromInstallationFile -ForceForUnknownPublisher $true -InstallationFileLocation $depSource -MsiInstaller -DeploymentTypeName $depName
+                            Add-CMMsiDeploymentType -ApplicationName $appName -Force -ContentLocation $depSource -DeploymentTypeName $depName
                         }
                         Write-Log -Category "info" -Message "deployment type created"
                     }
@@ -160,47 +160,39 @@ catch {}
                     Write-Log -Category "info" -Message "rule: $scriptDetection"
                     if ($uninst.length -gt 0) {
                         $DeploymentTypeHash = @{
-                            ManualSpecifyDeploymentType = $true
-                            ApplicationName = "$appName"
+			    ApplicationName = "$appName"
                             DeploymentTypeName = "$DepName"
-                            DetectDeploymentTypeByCustomScript = $true
-                            ScriptInstaller = $true
                             ScriptType = 'PowerShell'
-                            ScriptContent =$scriptDetection
-                            AdministratorComment = "$depComm"
+                            ScriptContent = $scriptDetection
+                            Comment = "$depComm"
                             ContentLocation = "$depPath"
-                            InstallationProgram = "$program"
-                            UninstallProgram = "$uninst"
-                            RequiresUserInteraction = $false
+                            InstallCommand = "$program"
+                            UninstallCommand = "$uninst"
                             InstallationBehaviorType = 'InstallForSystem'
-                            InstallationProgramVisibility = 'Hidden'
+                            UserInteractionMode = 'Hidden'
                         }
                     }
                     else {
                         $DeploymentTypeHash = @{
-                            ManualSpecifyDeploymentType = $true
                             ApplicationName = "$appName"
                             DeploymentTypeName = "$DepName"
-                            DetectDeploymentTypeByCustomScript = $true
-                            ScriptInstaller = $true
                             ScriptType = 'PowerShell'
-                            ScriptContent =$scriptDetection
-                            AdministratorComment = "$depComm"
+                            ScriptContent = $scriptDetection
+                            Comment = "$depComm"
                             ContentLocation = "$depPath"
-                            InstallationProgram = "$program"
-                            RequiresUserInteraction = $false
+                            InstallCommand = "$program"
                             InstallationBehaviorType = 'InstallForSystem'
-                            InstallationProgramVisibility = 'Hidden'
+                            UserInteractionMode = 'Hidden'
                         }
                     }
                     Write-Log -Category "info" -Message "Adding Deployment Type"
 
                     try {
                         if ($depCPU -eq '32') {
-                            Add-CMDeploymentType @DeploymentTypeHash -EnableBranchCache $True -Force32BitInstaller $True
+                            Add-CMScriptDeploymentType @DeploymentTypeHash -EnableBranchCache -Force32Bit
                         }
                         else {
-                            Add-CMDeploymentType @DeploymentTypeHash -EnableBranchCache $True
+                            Add-CMScriptDeploymentType @DeploymentTypeHash -EnableBranchCache
                         }
                         Write-Log -Category "info" -Message "deployment type created"
                     }
