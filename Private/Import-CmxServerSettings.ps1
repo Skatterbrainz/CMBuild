@@ -21,7 +21,7 @@ function Import-CmxServerSettings {
                 switch ($setKey) {
                     'NetworkAccessAccountName' {
                         Write-Log -Category "info" -Message "setting $setKey == $setVal"
-						if (Get-WmiObject -Class Win32_UserAccount | Where-Object {$_.Domain -eq "$($env:USERDOMAIN)" -and $_.Name -eq "$setVal"}) {
+						if (Get-WmiObject -Class Win32_UserAccount | Where-Object {$_.Caption -eq "$setVal"}) {
 							try {
 								Set-CMSoftwareDistributionComponent -SiteCode "$sitecode" -NetworkAccessAccountName "$setVal"
 							}
