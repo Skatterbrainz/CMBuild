@@ -124,6 +124,7 @@
 							<option name="ManageUnsolicitedRemoteAssistance" value="True" />
 							<option name="ManageRemoteDesktopSetting" value="True" />
 							<option name="PromptUserForClipboardPermission" value="False" />
+							<option name="FirewallExceptionProfile" value="Domain" />
 						</options>
 					</setting>
 					<setting use="1" name="SoftwareDeployment">
@@ -158,6 +159,7 @@
 							<option name="ManageUnsolicitedRemoteAssistance" value="True" />
 							<option name="ManageRemoteDesktopSetting" value="True" />
 							<option name="PromptUserForClipboardPermission" value="False" />
+							<option name="FirewallExceptionProfile" value="Domain" />
 						</options>
 					</setting>
 					<setting use="1" name="SoftwareInventory">
