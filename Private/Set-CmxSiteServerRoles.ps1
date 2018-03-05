@@ -9,6 +9,7 @@ function Set-CmxSiteServerRoles {
     Write-Host "Configuring Site System Roles" -ForegroundColor Green
     $result = $True
     $Time1  = Get-Date
+    $hostname = "$($env:COMPUTERNAME).$($env:USERDNSDOMAIN)"
     foreach ($item in $DataSet.configuration.cmsite.sitesystemroles.sitesystemrole | Where-Object {$_.use -eq '1'}) {
         $roleName = $item.name
         $roleComm = $item.comment
