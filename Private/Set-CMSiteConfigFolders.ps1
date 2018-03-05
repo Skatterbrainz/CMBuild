@@ -34,7 +34,7 @@ function Set-CMSiteConfigFolders {
     foreach ($item in $DataSet.configuration.cmsite.folders.folder | Where-Object {$_.use -eq '1'}) {
         $folderName = $item.name
         $folderPath = $item.path
-		Write-Log -Category "info" -Message "folder path: $folderPath\folderName"
+		Write-Log -Category "info" -Message "folder path: $folderPath\$folderName"
 		if (Test-Path "$folderPath\$folderName") {
 			Write-Log -Category "info" -Message "folder already exists"
 		}
