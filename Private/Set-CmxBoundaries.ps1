@@ -23,6 +23,7 @@ function Set-CmxBoundaries {
         Write-Log -Category "info" -Message "boundary group = $bGrp"
         try {
             $bx = New-CMBoundary -Name $bName -Type IPRange -Value $bData -ErrorAction Stop
+	    $bID = $bx.BoundaryID
             Write-Log -Category "info" -Message "boundary [$bName] created"
         }
         catch {
@@ -61,7 +62,7 @@ function Set-CmxBoundaries {
             }
         }
         else {
-            Write-Log -Category "info" -Message "oundary [$bName] is not assigned to a boundary group"
+            Write-Log -Category "info" -Message "Boundary [$bName] is not assigned to a boundary group"
         }
     } # foreach
     Write-Log -Category info -Message "function runtime: $(Get-TimeOffset $time1)"
