@@ -84,12 +84,10 @@ function Copy-CMBuildTemplate {
 				break
 			}
 			Write-Verbose "content imported from $Source2"
-		}
-		else {
+		} else {
 			try {
 				[xml]$xmldata = Get-Content -Path $Source2 -ErrorAction SilentlyContinue
-			}
-			catch {
+			} catch {
 				Write-Error $_.Exception.Message
 				break
 			}
@@ -99,19 +97,15 @@ function Copy-CMBuildTemplate {
 			Write-Verbose "scrubbing template data"
 			if (-not $NoScrub) {
 				[xml]$newdata = Get-CMSiteConfigCleanXML -XmlData $xmldata
-			}
-			else {
+			} else {
 				[xml]$newdata = $xmldata
 			}
 			Write-Verbose "saving new copy as $NewFile"
 			$newdata.Save($NewFile)
 			Write-Host "$NewFile created successfully" -ForegroundColor Cyan
 			Write-Host "be sure to edit the new template before using" -ForegroundColor Magenta
-		}
-		catch {
+		} catch {
 			Write-Error $_.Exception.Message
 		}
 	}
 }
-
-Export-ModuleMember -Function Copy-CMBuildTemplate

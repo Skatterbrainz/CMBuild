@@ -1,14 +1,14 @@
 function Import-CmxClientSettings {
-    [CmdletBinding(SupportsShouldProcess=$True)]
-    param (
-        [parameter(Mandatory=$True)]
-        [ValidateNotNullOrEmpty()]
-        $DataSet
-    )
+	[CmdletBinding(SupportsShouldProcess=$True)]
+	param (
+		[parameter(Mandatory=$True)]
+		[ValidateNotNullOrEmpty()]
+		$DataSet
+	)
 	Write-Log -Category "info" -Message "------------------------------ Import-CmxClientSettings -------------------------------"
-    Write-Host "Configuring Client Settings" -ForegroundColor Green
-    $result = $True
-    $Time1  = Get-Date
+	Write-Host "Configuring Client Settings" -ForegroundColor Green
+	$result = $True
+	$Time1  = Get-Date
 	
 	foreach ($item in $DataSet.configuration.cmsite.clientsettings.clientsetting | Where-Object {$_.use -eq '1'}) {
 		$csName = $item.Name
@@ -18,19 +18,17 @@ function Import-CmxClientSettings {
 		Write-Log -Category "info" -Message "setting group name... $csName"
 		if (Get-CMClientSetting -Name $csName) {
 			Write-Log -Category info -Message "client setting is already created"
-		}
-		else {
+		} else {
 			try {
 				New-CMClientSetting -Name "$csName" -Description "$csComm" -Type $csType -ErrorAction SilentlyContinue | Out-Null
 				Write-Log -Category info -Message "client setting was created successfully."
+			} catch {
+				Write-Log -Category error -Message "your client setting just fell into a woodchipper. what a mess."
+				Write-Error $_.Exception.Message
+				$result = $False
+				break
 			}
-			catch {
-                Write-Log -Category error -Message "your client setting just fell into a woodchipper. what a mess."
-                Write-Error $_.Exception.Message
-                $result = $False
-                break
-            }
-        }
+		}
 		foreach ($csSet in $item.settings.setting | Where-Object {$_.use -eq '1'}) {
 			$setName = $csSet.name
 			Write-Log -Category "info" -Message "setting name......... $setName"
@@ -42,15 +40,12 @@ function Import-CmxClientSettings {
 				switch ($optVal) {
 					'true' {
 						$param = " `-$optName `$true"
-						break
 					}
 					'false' {
 						$param = " `-$optName `$false"
-						break
 					}
 					'null' {
 						$param = " `-$optName `$null"
-						break
 					}
 					default {
 						if ($optName -eq 'SWINVConfiguration') {
@@ -69,11 +64,9 @@ function Import-CmxClientSettings {
 							}
 							$paramx += "`}"
 							$param = " `-AddInventoryFileType $paramx"
-						}
-						else {
+						} else {
 							$param = " `-$optName `"$optVal`""
 						}
-						break
 					}
 				} # switch
 				$code += $param
@@ -82,8 +75,7 @@ function Import-CmxClientSettings {
 			try {
 				Invoke-Expression -Command $code -ErrorAction Stop
 				Write-Log -Category info -Message "client setting has been applied successfully"
-			}
-			catch {
+			} catch {
 				Write-Log -Category error -Message $_.Exception.Message
 				$result = $False
 				break
@@ -91,6 +83,6 @@ function Import-CmxClientSettings {
 			Write-Log -Category "info" -Message "............................................................"
 		} # foreach - setting group
 	} # foreach - client setting policy
-    Write-Log -Category info -Message "function runtime: $(Get-TimeOffset -StartTime $Time1)"
-    Write-Output $result
+	Write-Log -Category info -Message "function runtime: $(Get-TimeOffset -StartTime $Time1)"
+	Write-Output $result
 }

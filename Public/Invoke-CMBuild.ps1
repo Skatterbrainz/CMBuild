@@ -65,8 +65,7 @@ function Invoke-CMBuild {
 	Write-Log -Category "info" -Message "----------------------------------------------------"
 	if ($xmldata.configuration.schemaversion -ge $SchemaVersion) {
 		Write-Log -Category "info" -Message "xml template schema version is valid"
-	}
-	else {
+	} else {
 		Write-Log -Category "info" -Message "xml template schema version is invalid: $($xmldata.configuration.schemaversion)"
 		Write-Warning "The specified XML file is not using a current schema version"
 		break
@@ -76,8 +75,7 @@ function Invoke-CMBuild {
 
 	if ($ShowMenu) {
 		$controlset = $xmldata.configuration.packages.package | Out-GridView -Title "Select Packages to Run" -PassThru
-	}
-	else {
+	} else {
 		$controlset = $xmldata.configuration.packages.package | Where-Object {$_.use -eq '1'}
 	}
 
@@ -101,8 +99,8 @@ function Invoke-CMBuild {
 
 		Write-Host "Executing project configuration" -ForegroundColor Green
 
-		Disable-InternetExplorerESC | Out-Null
-		Set-CMxRegKeys -DataSet $xmldata -Order "before" | Out-Null
+		$null = Disable-InternetExplorerESC
+		$null = Set-CMxRegKeys -DataSet $xmldata -Order "before"
 
 		Write-Log -Category "info" -Message "beginning package execution"
 		Write-Log -Category "info" -Message "----------------------------------------------------"
@@ -145,8 +143,7 @@ function Invoke-CMBuild {
 				$installed = Get-CMxInstallState -PackageName $pkgName -RuleType $detType -RuleData $detPath
 				if ($installed) {
 					Write-Log -Category "info" -Message "install state... $pkgName is INSTALLED"
-				}
-				else {
+				} else {
 					Write-Log -Category "info" -Message "install state... $pkgName is NOT INSTALLED"
 					$x = Invoke-CMxPackage -Name $pkgName -PackageType $pkgType -PayloadSource $pkgSrc -PayloadFile $pkgFile -PayloadArguments $pkgArgs
 					if ($x -ne 0) {$continue = $False; break}
@@ -157,8 +154,7 @@ function Invoke-CMBuild {
 					if ($NoReboot) {
 						Write-Log -Category 'info' -Message 'a reboot is required - but NoReboot was requested.'
 						Write-Warning "A reboot is required but has been suppressed."
-					}
-					else {
+					} else {
 						Write-Log -Category 'info' -Message 'a reboot is requested.'
 						Invoke-CMxRestart -XmlFile $XmlFile
 						Write-Warning "A reboot is requested. Reboot now."
@@ -166,15 +162,14 @@ function Invoke-CMBuild {
 						break
 					}
 				}
-			}
-			else {
+			} else {
 				Write-Warning "STOP! aborted at step [$pkgName] $(Get-Date)"
 				break
 			}
 		} # foreach
 
 		if (($pkgcount -gt 0) -and ($continue)) {
-			Set-CMxRegKeys -DataSet $xmldata -Order "after" | Out-Null
+			$null = Set-CMxRegKeys -DataSet $xmldata -Order "after"
 		}
 	}
 
@@ -186,5 +181,3 @@ function Invoke-CMBuild {
 	}
 	Stop-Transcript
 }
-
-Export-ModuleMember -Function Invoke-CMBuild

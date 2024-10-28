@@ -1,18 +1,16 @@
 function Get-CMxTemplateScrubData {
-    param (
+	param (
 		[parameter(Mandatory=$True)]
 		$XmlData
-    )
+	)
 	try {
 		Write-Verbose "scrubbing template data"
 		if (-not $NoScrub) {
 			[xml]$result = Get-CMBuildCleanXML -XmlData $XmlData
-		}
-		else {
+		} else {
 			[xml]$result = $xmldata
 		}
-	}
-	catch {
+	} catch {
 		Write-Error $_.Exception.Message
 	}
 	Write-Output $result

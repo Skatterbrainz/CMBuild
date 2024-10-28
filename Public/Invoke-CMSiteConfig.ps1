@@ -39,7 +39,7 @@ function Invoke-CMSiteConfig {
 	$RunTime1 = Get-Date
 	Write-Host "CMSiteConfig $CMBuildVersion" -ForegroundColor Cyan
 	$Script:CMxLogFile = $Script:CMConfigLogFile
-	try {stop-transcript -ErrorAction SilentlyContinue} catch {}
+	try {Stop-Transcript -ErrorAction SilentlyContinue} catch {}
 	try {Start-Transcript -Path $Script:tsFile -Force} catch {}
 
 	Write-Host "------------------- BEGIN $(Get-Date) -------------------" -ForegroundColor Green
@@ -57,8 +57,7 @@ function Invoke-CMSiteConfig {
 	Write-Log -Category "info" -Message "----------------------------------------------------"
 	if ($xmldata.configuration.schemaversion -ge $SchemaVersion) {
 		Write-Log -Category "info" -Message "xml template schema version is valid"
-	}
-	else {
+	} else {
 		Write-Log -Category "info" -Message "xml template schema version is invalid: $($xmldata.configuration.schemaversion)"
 		Write-Warning "The specified XML file is not using a current schema version"
 		break
@@ -88,8 +87,7 @@ function Invoke-CMSiteConfig {
 
 	if ($ShowMenu) {
 		$controlset = $xmldata.configuration.cmsite.control.ci | Out-GridView -Title "Select Features to Run" -PassThru
-	}
-	else {
+	} else {
 		$controlset = $xmldata.configuration.cmsite.control.ci | Where-Object {$_.use -eq '1'}
 	}
 	Invoke-CMSiteConfigProcess -ControlSet $controlSet -DataSet $xmldata
@@ -100,5 +98,3 @@ function Invoke-CMSiteConfig {
 	Write-Log -Category info -Message "total runtime: $(Get-TimeOffset $Runtime1)"
 	Stop-Transcript
 }
-
-Export-ModuleMember -Function Invoke-CMSiteConfig

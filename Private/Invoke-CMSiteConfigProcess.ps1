@@ -10,106 +10,82 @@ function Invoke-CMSiteConfigProcess {
 			'ENVIRONMENT' {
 				if (Test-CMxAdContainer) {
 					Write-Log -Category "info" -Message "AD container verified"
-				}
-				else {
+				} else {
 					Write-Log -Category "warning" -Message "AD container could not be verified"
 				}
 				if (Test-CMxAdSchema) {
 					Write-Log -Category "info" -Message "AD schema has been extended"
-				}
-				else {
+				} else {
 					Write-Log -Category "warning" -Message "AD schema has not been extended"
 				}
-				break
 			}
 			'ACCOUNTS' {
-				Import-CmxAccounts -DataSet $xmldata | Out-Null
-				break
+				$null = Import-CmxAccounts -DataSet $xmldata
 			}
 			'SERVERSETTINGS' {
-				Import-CmxServerSettings -DataSet $xmldata | Out-Null
-				break
+				$null = Import-CmxServerSettings -DataSet $xmldata
 			}
 			'ADFOREST' {
-				Set-CmxADForest -DataSet $xmldata | Out-Null
-				break
+				$null = Set-CmxADForest -DataSet $xmldata
 			}
 			'DISCOVERY' {
-				Import-CmxDiscoveryMethods -DataSet $xmldata | Out-Null
-				Invoke-CMForestDiscovery -SiteCode $sitecode | Out-Null
-				break
+				$null = Import-CmxDiscoveryMethods -DataSet $xmldata
+				$null = Invoke-CMForestDiscovery -SiteCode $sitecode
 			}
 			'BOUNDARYGROUPS' {
-				Import-CmxBoundaryGroups -DataSet $xmldata | Out-Null
-				break
+				$null = Import-CmxBoundaryGroups -DataSet $xmldata
 			}
 			'BOUNDARIES' {
 				if ((-not($AutoBoundaries)) -or ($ForceBoundaries)) {
-					Set-CmxBoundaries -DataSet $xmldata | Out-Null
+					$null = Set-CmxBoundaries -DataSet $xmldata
 				}
-				break
 			}
 			'SITEROLES' {
-				Set-CmxSiteServerRoles -DataSet $xmldata | Out-Null
-				break
+				$null = Set-CmxSiteServerRoles -DataSet $xmldata
 			}
 			'CLIENTSETTINGS' {
-				Import-CmxClientSettings -DataSet $xmldata | Out-Null
-				break
+				$null = Import-CmxClientSettings -DataSet $xmldata
 			}
 			'CLIENTINSTALL' {
-				Import-CmxClientPush -DataSet $xmldata | Out-Null
-				break
+				$null = Import-CmxClientPush -DataSet $xmldata
 			}
 			'FOLDERS' {
 				if (Set-CMSiteConfigFolders -SiteCode $sitecode -DataSet $xmldata) {
 					Write-Host "Console folders have been created" -ForegroundColor Green
-				}
-				else {
+				} else {
 					Write-Warning "Failed to create console folders"
 				}
-				break
 			}
 			'DPGROUPS' {
-				Import-CmxDPGroups -DataSet $xmldata | Out-Null
-				break
+				$null = Import-CmxDPGroups -DataSet $xmldata
 			}
 			'QUERIES' {
 				if (Import-CmxQueries -DataSet $xmldata) {
 					Write-Host "Custom Queries have been created" -ForegroundColor Green
-				}
-				else {
+				} else {
 					Write-Warning "Failed to create custom queries"
 				}
-				break
 			}
 			'COLLECTIONS' {
-				Import-CmxCollections -DataSet $xmldata | Out-Null
-				break
+				$null = Import-CmxCollections -DataSet $xmldata
 			}
 			'OSIMAGES' {
-				Import-CmxOSImages -DataSet $xmldata | Out-Null
-				break
+				$null = Import-CmxOSImages -DataSet $xmldata
 			}
 			'OSINSTALLERS' {
-				Import-CmxOSInstallers -DataSet $xmldata | Out-Null
-				break
+				$null = Import-CmxOSInstallers -DataSet $xmldata
 			}
 			'MTASKS' {
-				Import-CmxMaintenanceTasks -DataSet $xmldata | Out-Null
-				break
+				$null = Import-CmxMaintenanceTasks -DataSet $xmldata
 			}
 			'APPCATEGORIES' {
-				Import-CmxAppCategories -DataSet $xmldata | Out-Null
-				break
+				$null = Import-CmxAppCategories -DataSet $xmldata
 			}
 			'APPLICATIONS' {
-				Import-CmxApplications -DataSet $xmldata | Out-Null
-				break
+				$null = Import-CmxApplications -DataSet $xmldata
 			}
 			'MALWAREPOLICIES' {
-				Import-CmxMalwarePolicies -DataSet $xmldata | Out-Null
-				break
+				$null = Import-CmxMalwarePolicies -DataSet $xmldata
 			}
 		}
 	}

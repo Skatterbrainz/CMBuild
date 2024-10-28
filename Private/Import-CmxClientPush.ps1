@@ -9,64 +9,57 @@ function Import-CmxClientPush {
 	foreach ($set in $DataSet.configuration.cmsite.clientoptions.CMClientPushInstallation | Where-Object {$_.use -eq '1'}) {
 		if ($set.AutomaticInstall -eq 'true') {
 			try {
-				Set-CMClientPushInstallation -SiteCode "$sitecode" -EnableAutomaticClientPushInstallation $True | Out-Null
+				$null = Set-CMClientPushInstallation -SiteCode "$sitecode" -EnableAutomaticClientPushInstallation $True
 				Write-Log -Category "info" -Message "client push: enabled automatic client push installation"
-			}
-			catch {
+			} catch {
 				Write-Log -Category "error" -Message $_.Exception.Message
 			}
 		}
 		if ($set.ClientCMServer -eq 'true') {
 			try {
-				Set-CMClientPushInstallation -SiteCode "$sitecode" -EnableSystemTypeConfigurationManager $True | Out-Null
+				$null = Set-CMClientPushInstallation -SiteCode "$sitecode" -EnableSystemTypeConfigurationManager $True
 				Write-Log -Category "info" -Message "client push: enabled client install on CM site systems"
-			}
-			catch {
+			} catch {
 				Write-Log -Category "error" -Message $_.Exception.Message
 			}
 		}
 		if ($set.ClientServer -eq 'true') {
 			try {
-				Set-CMClientPushInstallation -SiteCode "$sitecode" -EnableSystemTypeServer $True | Out-Null
+				$null = Set-CMClientPushInstallation -SiteCode "$sitecode" -EnableSystemTypeServer $True
 				Write-Log -Category "info" -Message "client push: enabled client install on servers"
-			}
-			catch {
+			} catch {
 				Write-Log -Category "error" -Message $_.Exception.Message
 			}
 		}
 		if ($set.ClientDC -eq 'true') {
 			try {
-				Set-CMClientPushInstallation -SiteCode "$sitecode" -InstallClientToDomainController $True | Out-Null
+				$null = Set-CMClientPushInstallation -SiteCode "$sitecode" -InstallClientToDomainController $True
 				Write-Log -Category "info" -Message "client push: enabled client install on domain controllers"
-			}
-			catch {
+			} catch {
 				Write-Log -Category "error" -Message $_.Exception.Message
 			}
 		}
 		if ($set.ClientWorkstation -eq 'true') {
 			try {
-				Set-CMClientPushInstallation -SiteCode "$sitecode" -EnableSystemTypeWorkstation $True | Out-Null
+				$null = Set-CMClientPushInstallation -SiteCode "$sitecode" -EnableSystemTypeWorkstation $True
 				Write-Log -Category "info" -Message "client push: enabled client install on workstations"
-			}
-			catch {
+			} catch {
 				Write-Log -Category "error" -Message $_.Exception.Message
 			}
 		}
 		if ($set.Accounts.length -gt 0) {
 			foreach ($acct in $set.Accounts.Split(",")) {
 				Write-Log -Category "info" -Message "assigning user account to client push list: $acct"
-				if (Get-WmiObject -Class Win32_UserAccount | Where {$_.Caption -eq "$acct"}) {
+				if (Get-WmiObject -Class Win32_UserAccount | Where-Object {$_.Caption -eq "$acct"}) {
 					try {
-						Set-CMClientPushInstallation -SiteCode "$sitecode" -AddAccount $acct | Out-Null
+						$null = Set-CMClientPushInstallation -SiteCode "$sitecode" -AddAccount $acct
 						Write-Log -Category "info" -Message "client push: set installation account to $($acct)"
-					}
-					catch {
+					} catch {
 						Write-Log -Category "error" -Message $_.Exception.Message
 						$result = $False
 						break
 					}
-				}
-				else {
+				} else {
 					Write-Log -Category "error" -Message "user account $acct was not found in the current AD domain"
 					$result = $False
 					break
@@ -75,10 +68,9 @@ function Import-CmxClientPush {
 		}
 		if ($set.InstallationProperty.Length -gt 0) {
 			try {
-				Set-CMClientPushInstallation -SiteCode "$sitecode" -InstallationProperty $set.InstallationProperty | Out-Null
+				$null = Set-CMClientPushInstallation -SiteCode "$sitecode" -InstallationProperty $set.InstallationProperty
 				Write-Log -Category "info" -Message "client push: set installation property $($set.InstallationProperty)"
-			}
-			catch {
+			} catch {
 				Write-Log -Category "error" -Message $_.Exception.Message
 			}
 		}

@@ -10,8 +10,7 @@ function Convert-CmxString {
 	$sitecode  = $DataSet.configuration.project.sitecode
 	if ($StringVal -ne "") {
 		Write-Output $((($StringVal -replace '@HOST@', "$shortname") -replace '@HOSTNAME@', "$fullname") -replace '@SITECODE@', $sitecode)
-	}
-	else {
+	} else {
 		Write-Output ""
 	}
 }

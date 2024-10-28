@@ -1,4 +1,4 @@
-$Script:CMBuildVersion  = '1.0.7'
+$Script:CMBuildVersion  = '1.0.8'
 $Script:CMBuildRegRoot1 = 'HKLM:\SOFTWARE\CMBUILD'
 $Script:CMBuildRegRoot2 = 'HKLM:\SOFTWARE\CMSITECONFIG'
 $Script:CMBuildLogFile  = "$($env:SYSTEMROOT)\temp\cmbuild.log"
@@ -13,4 +13,5 @@ $Script:basekey         = 'HKLM:\SOFTWARE\CM_SITECONFIG'
 $Script:tsFile          = "$LogsFolder\cmsiteconfig`_$HostName`_transaction.log"
 $Script:RSJobName       = 'ResumeCMBuild'
 
-$(Get-ChildItem "$PSScriptRoot" -Recurse -Include "*.ps1").foreach{. $_.FullName}
+Get-ChildItem -Path $PSScriptRoot -Filter *.ps1 -File | ForEach-Object { . $_.FullName }
+

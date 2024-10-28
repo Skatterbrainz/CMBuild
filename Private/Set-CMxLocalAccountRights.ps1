@@ -34,14 +34,12 @@ function Set-CMxLocalAccountRights {
 			if ($privs -contains $right) {
 				Write-Log -Category "info" -Message "$right, already granted to: $UserName"
 				$result = $True
-			}
-			else {
+			} else {
 				Write-Log -Category "info" -Message "granting: $right, to: $UserName"
 				Grant-Privilege -Identity $UserName -Privilege $right
 			}
 		} # foreach
-	}
-	else {
+	} else {
 		foreach ($right in $Privileges.Split(',')) {
 			Write-Log -Category "info" -Message "granting: $right, to: $UserName"
 			Grant-Privilege -Identity $UserName -Privilege $right

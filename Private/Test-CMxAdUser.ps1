@@ -1,15 +1,15 @@
 function Test-CMxAdUser {
-    [CmdletBinding(SupportsShouldProcess=$True)]
+	[CmdletBinding(SupportsShouldProcess=$True)]
 	param(
-        [parameter(Mandatory=$True)]
-        [ValidateNotNullOrEmpty()]
-        [string] $UserName
-    )
+		[parameter(Mandatory=$True)]
+		[ValidateNotNullOrEmpty()]
+		[string] $UserName
+	)
 	Write-Log -Category "info" -Message "------------------------------ Test-CMxAdUser -------------------------------"
-    $tmpuser = $UserName.Split('\')[$UserName.Split('\').Count - 1]
+	$tmpuser = $UserName.Split('\')[$UserName.Split('\').Count - 1]
 	Write-Host "Searching for AD user: $UserName" -ForegroundColor Green
 	$strFilter = "(&(objectCategory=user)(sAMAccountName=$tmpuser))"
-    Write-Verbose $strFilter
+	Write-Verbose $strFilter
 	$objDomain   = New-Object System.DirectoryServices.DirectoryEntry
 	$objSearcher = New-Object System.DirectoryServices.DirectorySearcher
 	$objSearcher.SearchRoot = $objDomain

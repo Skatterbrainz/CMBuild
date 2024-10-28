@@ -29,7 +29,7 @@
 		<package use="1" name="CMTOOLKIT" type="payload" comment="ConfigMgr Toolkit 2012 R2" dependson="CONFIGMGR" />
 		<package use="1" name="RCTOOLS" type="payload" comment="Recast RightClick Tools" dependson="CONFIGMGR" />
 	</packages>
-    <payloads comment="Describes execution details for each package">
+	<payloads comment="Describes execution details for each package">
 		<payload name="SERVERROLES" file="roles.xml" params="" comment="only used if the package type is payload, must reside in same path as cm_build.xml" />
 		<payload name="ADSCHEMA" file="extadsch.exe" params="" comment="AD Schema Extension" />
 		<payload name="ADK" file="adksetup.exe" params="/installpath E:\ADK /Features OptionId.DeploymentTools OptionId.WindowsPreinstallationEnvironment OptionId.ImagingAndConfigurationDesigner OptionId.UserStateMigrationTool /norestart /quiet /ceip off" comment="ADK" />
@@ -41,27 +41,27 @@
 		<payload name="CMTOOLKIT" file="ConfigMgrTools.msi" params="/qb! /norestart" comment="ConfigMgr Toolkit" />
 		<payload name="RCTOOLS" file="Recast_RCT_Latest.msi" params="/qb! /norestart" comment="Right-Click Tools" />
 		<payload name="WSUS" file="wsus.xml" params="" comment="only used if the package type is payload" />
-    </payloads>
-    <detections comment="Describes criteria to indicate install status">
+	</payloads>
+	<detections comment="Describes criteria to indicate install status">
 		<detect name="LOCALACCOUNTS" path="HKLM:\SOFTWARE\CM_BUILD\PROCESSED" value="LOCALACCOUNTS" type="synthetic" />
 		<detect name="SERVERROLES" path="HKLM:\SOFTWARE\CM_BUILD\PROCESSED" value="SERVERROLES" type="synthetic" />
 		<detect name="ADK" path="HKLM:\SOFTWARE\WOW6432Node\Microsoft\Windows Kits\Installed Roots" value="" type="automatic" />
-		<detect name="MDT" path="HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\{9547DE37-4A70-4194-97EA-ACC3E747254B}" value="" type="automatic" />
-		<detect name="SQLSERVER" path="HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\Microsoft SQL Server 13" value="" type="automatic" />
-		<detect name="SSMS" path="HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\{510DB6E6-7CF0-4B25-A51E-3AED7E25D507}" value="" type="automatic" />
+		<detect name="MDT" path="HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\{2E6CD7B9-9D00-4B04-882F-E6971BC9A763}" value="" type="automatic" />
+		<detect name="SQLSERVER" path="HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\Microsoft SQL Server 16" value="" type="automatic" />
+		<detect name="SSMS" path="HKLM:\SOFTWARE\Wow6432Node\Microsoft\Windows\CurrentVersion\Uninstall\{98FA3A6A-2028-4F6B-993E-D1851F0D5EC6}" value="" type="automatic" />
 		<detect name="SQLCONFIG" path="HKLM:\SOFTWARE\CM_BUILD\PROCESSED" value="SQLCONFIG" type="synthetic" />
 		<detect name="WSUS" path="UpdateServices-DB" value="" type="feature" />
 		<detect name="WSUSCONFIG" path="HKLM:\SOFTWARE\CM_BUILD\PROCESSED" value="WSUSCONFIG" type="synthetic" />
 		<detect name="CONFIGMGR" path="HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\SMS Primary Site" value="" type="automatic" />
 		<detect name="CMTOOLKIT" path="C:\Program Files (x86)\ConfigMgr 2012 Toolkit R2\ToolkitHelp.docx" value="" type="automatic" />
 		<detect name="RCTOOLS" path="HKLM:\SOFTWARE\WOW6432Node\Microsoft\Windows\CurrentVersion\Uninstall\{4FFF7ECC-CCF7-4530-B938-E7812BB91186}" value="" type="automatic" />
-    </detections>
+	</detections>
 	<localaccounts comment="Local Accounts and Group Memberships">
 		<localaccount use="1" name="CONTOSO\sql-svc" memberof="Administrators" rights="SeServiceLogonRight,SeDenyInteractiveLogonRight" comment="rights are based on http://get-carbon.org/Grant-Privilege.html" />
 		<localaccount use="1" name="CONTOSO\sccmadmin" memberof="Administrators" rights="" comment="" />
 		<localaccount use="1" name="CONTOSO\IT sccm admins" memberof="Administrators" rights="" comment="" />
 	</localaccounts>
-    <folders comment="Folders to be created">
+	<folders comment="Folders to be created">
 		<folder use="1" name="E:\ADK" comment="ADK installation path" />
 		<folder use="1" name="E:\MDT" comment="MDT installation path" />
 		<folder use="1" name="E:\CONFIGMGR" comment="ConfigMgr installation path" />
@@ -73,10 +73,10 @@
 		<folder use="1" name="F:\CMPREREQS" comment="ConfigMgr prereqs download path" />
 		<folder use="1" name="F:\UPDATES" comment="WSUS updates storage path" />
 		<folder use="1" name="F:\SOURCES,F:\SOURCES\DRVPKG,F:\SOURCES\DRVSRC,F:\SOURCES\SCRIPTS,F:\SOURCES\TOOLS" comment="" />
-    </folders>
-    <files comment="Files to be created">
+	</folders>
+	<files comment="Files to be created">
 		<!-- reference: https://docs.microsoft.com/en-us/sql/database-engine/install-windows/install-sql-server-2016-from-the-command-prompt -->
-		<file use="1" pkg="SQLSERVER" name="sqlsetup.ini" path="F:\CM_BUILD" force="true" comment="SQL Server 2016 installation file">
+		<file use="1" pkg="SQLSERVER" name="sqlsetup.ini" path="F:\CM_BUILD" force="true" comment="SQL Server 2022 installation file">
 			<keys>
 				<key name="__SECTION1" value="OPTIONS" />
 				<key name="ACTION" value="Install" />
@@ -135,6 +135,7 @@
 				<key name="TCPENABLED" value="1" comment="TCP enabled" />
 				<key name="NPENABLED" value="1" comment="Named Pipes enabled" />
 				<key name="BROWSERSVCSTARTUPTYPE" value="Disabled" comment="SQL Browser service startup" />
+				<key name="PRODUCTCOVEREDBYSA" value="False" comment="License is covered by Software Assurance or SQL Server Subscription contract" />
 				<key name="IAcceptSQLServerLicenseTerms" value="True" />
 			</keys>
 		</file>
@@ -174,10 +175,10 @@
 				<key name="__SECTION6" value="SABranchOptions" comment="do not modify" />
 				<key name="SAActive" value="1" comment="Software Assurance active" />
 				<key name="CurrentBranch" value="1" />
-				<key name="SAExpiration" value="2017-08-14 00:00:00.000" comment="SA initiation date" />
+				<key name="SAExpiration" value="2024-10-28 00:00:00.000" comment="SA initiation date" />
 				<key name="__SECTION7" value="HierarchyExpansionOption" comment="do not modify" />
-            </keys>
-        </file>
+			</keys>
+		</file>
 	</files>
 	<features comment="Windows Server roles and features">
 		<feature use="1" name="SERVERROLES" comment="Prerequisite roles">BITS,BITS-IIS-Ext,NET-Framework-45-ASPNET,NET-Framework-Core,NET-Framework-Features,NET-WCF-HTTP-Activation45,RDC,RSAT-Bits-Server,WAS,WAS-Config-APIs,WAS-Process-Model,Web-App-Dev,Web-Asp-Net,Web-Asp-Net45,Web-Common-Http,Web-Default-Doc,Web-Dir-Browsing,Web-Filtering,Web-Health,Web-Http-Errors,Web-Http-Logging,Web-Http-Redirect,Web-Http-Tracing,Web-ISAPI-Ext,Web-ISAPI-Filter,Web-Log-Libraries,Web-Metabase,Web-Mgmt-Compat,Web-Mgmt-Console,Web-Mgmt-Tools,Web-Net-Ext,Web-Net-Ext45,Web-Performance,Web-Request-Monitor,Web-Security,Web-Server,Web-Stat-Compression,Web-Static-Content,Web-WebServer,Web-Windows-Auth,Web-WMI</feature>
