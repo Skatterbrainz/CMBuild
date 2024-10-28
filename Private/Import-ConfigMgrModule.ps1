@@ -1,7 +1,7 @@
 function Import-ConfigMgrModule {
 	[CmdletBinding()]
 	param ()
-	Write-Log -Category "info" -Message "------------------------------ Import-CmxModule -------------------------------"
+	writeLogFile -Category "info" -Message "------------------------------ Import-CmxModule -------------------------------"
 	if (-not(Get-Module ConfigurationManager)) {
 		Write-Host "Importing the ConfigurationManager powershell module" -ForegroundColor Green
 		try {

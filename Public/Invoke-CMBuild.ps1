@@ -25,9 +25,9 @@ function Invoke-CMBuild {
 		Invoke-CMBuild -XmlFile .\cmbuild.xml -NoCheck -NoReboot -Detailed
 	.EXAMPLE
 		Invoke-CMBuild -XmlFile .\cmbuild.xml -ShowMenu -Verbose
+	.LINK
+		https://github.com/Skatterbrainz/CMBuild/blob/master/Docs/Invoke-CMBuild.md
 	.NOTES
-		1.0.6 - 11/16/2017 - David Stein
-
 		Read the associated XML to make sure the path and filename values
 		all match up like you need them to.
 	#>
@@ -47,31 +47,31 @@ function Invoke-CMBuild {
 		[parameter(Mandatory=$False, HelpMessage="Resume from previous unfinished processing")]
 			[switch] $Resume
 	)
-	Write-Host "CMBuild $CMBuildVersion" -ForegroundColor Cyan
-	$ScriptPath = Get-ScriptDirectory
+	Write-Host "CMBuild $CmBuildSettings['CMBuildVersion']" -ForegroundColor Cyan
+	$ScriptPath = getScriptDirectory
 	$RunTime1   = Get-Date
-	$tsFile     = "$LogsFolder\cm_build`_$HostName`_transaction.log"
+	$CmBuildSettings['tsFile'] = "$CmBuildSettings['LogsFolder']\cm_build`_$CmBuildSettings['ComputerName']`_transaction.log"
 	
 	try {stop-transcript -ErrorAction SilentlyContinue} catch {}
-	try {Start-Transcript -Path $tsFile -Force} catch {}
+	try {Start-Transcript -Path $CmBuildSettings['tsFile'] -Force} catch {}
 
 	if ($Resume) {$OpenKey = 'RESUME'} else {$OpenKey = 'BEGIN'}
-	Write-Log -Category "info" -Message "******************* $OpenKey $(Get-Date) *******************"
-	Write-Log -Category "info" -Message "script version = $CMBuildVersion"
+	writeLogFile -Category "info" -Message "******************* $OpenKey $(Get-Date) *******************"
+	writeLogFile -Category "info" -Message "script version = $CmBuildSettings['CMBuildVersion']"
 
-	Install-CMBuildModules
+	installCmxPSModules
 	
-	[xml]$xmldata = Get-CMxConfigData $XmlFile
-	Write-Log -Category "info" -Message "----------------------------------------------------"
-	if ($xmldata.configuration.schemaversion -ge $SchemaVersion) {
-		Write-Log -Category "info" -Message "xml template schema version is valid"
+	[xml]$xmldata = getCmxConfigData $XmlFile
+	writeLogFile -Category "info" -Message "----------------------------------------------------"
+	if ($xmldata.configuration.schemaversion -ge $CmBuildSettings['SchemaVersion']) {
+		writeLogFile -Category "info" -Message "xml template schema version is valid"
 	} else {
-		Write-Log -Category "info" -Message "xml template schema version is invalid: $($xmldata.configuration.schemaversion)"
+		writeLogFile -Category "info" -Message "xml template schema version is invalid: $($xmldata.configuration.schemaversion)"
 		Write-Warning "The specified XML file is not using a current schema version"
 		break
 	}
 
-	Set-CMxTaskCompleted -KeyName 'START' -Value $(Get-Date)
+	setCmxTaskCompleted -KeyName 'START' -Value $(Get-Date)
 
 	if ($ShowMenu) {
 		$controlset = $xmldata.configuration.packages.package | Out-GridView -Title "Select Packages to Run" -PassThru
@@ -84,26 +84,26 @@ function Invoke-CMBuild {
 		$AltSource = $xmldata.configuration.sources.source | 
 			Where-Object {$_.name -eq 'WIN10'} | 
 				Select-Object -ExpandProperty path
-		Write-Log -Category "info" -Message "alternate windows source = $AltSource"
-		Write-Log -Category "info" -Message "----------------------------------------------------"
-		Write-Log -Category "info" -Message "project info....... $($project.comment)"
+		writeLogFile -Category "info" -Message "alternate windows source = $AltSource"
+		writeLogFile -Category "info" -Message "----------------------------------------------------"
+		writeLogFile -Category "info" -Message "project info....... $($project.comment)"
 
-		if (-not (Import-CMxFolders -DataSet $xmldata)) {
+		if (-not (importCmxFolders -DataSet $xmldata)) {
 			Write-Warning "error: failed to create folders (aborting)"
 			break
 		}
-		if (-not (Import-CMxFiles -DataSet $xmldata)) {
+		if (-not (importCmxFiles -DataSet $xmldata)) {
 			Write-Warning "error: failed to create files (aborting)"
 			break
 		}
 
 		Write-Host "Executing project configuration" -ForegroundColor Green
 
-		$null = Disable-InternetExplorerESC
-		$null = Set-CMxRegKeys -DataSet $xmldata -Order "before"
+		$null = disableIESC
+		$null = setCmxRegKeys -DataSet $xmldata -Order "before"
 
-		Write-Log -Category "info" -Message "beginning package execution"
-		Write-Log -Category "info" -Message "----------------------------------------------------"
+		writeLogFile -Category "info" -Message "beginning package execution"
+		writeLogFile -Category "info" -Message "----------------------------------------------------"
 		$continue = $True
 		$pkgcount = 0
 		foreach ($package in $controlset) {
@@ -121,42 +121,42 @@ function Invoke-CMBuild {
 				$detType  = $detRule.type
 				$depends  = $package.dependson
 
-				Write-Log -Category "info" -Message "package name.... $pkgName"
-				Write-Log -Category "info" -Message "package type.... $pkgType"
-				Write-Log -Category "info" -Message "package comment. $pkgComm"
-				Write-Log -Category "info" -Message "payload source.. $pkgSrc"
-				Write-Log -Category "info" -Message "payload file.... $pkgFile"
-				Write-Log -Category "info" -Message "payload args.... $pkgArgs"
-				Write-Log -Category "info" -Message "rule type....... $detType"
+				writeLogFile -Category "info" -Message "package name.... $pkgName"
+				writeLogFile -Category "info" -Message "package type.... $pkgType"
+				writeLogFile -Category "info" -Message "package comment. $pkgComm"
+				writeLogFile -Category "info" -Message "payload source.. $pkgSrc"
+				writeLogFile -Category "info" -Message "payload file.... $pkgFile"
+				writeLogFile -Category "info" -Message "payload args.... $pkgArgs"
+				writeLogFile -Category "info" -Message "rule type....... $detType"
 
-				if (!(Test-CMxPackage -PackageName $dependson)) {
-					Write-Log -Category "error" -Message "dependency missing: $depends"
+				if (!(testCmxPackage -PackageName $dependson)) {
+					writeLogFile -Category "error" -Message "dependency missing: $depends"
 					$continue = $False
 					break
 				}
 				if (($detType -eq "") -or ($detPath -eq "") -or (-not($detPath))) {
-					Write-Log -Category "error" -Message "detection rule is missing for $pkgName (aborting)"
+					writeLogFile -Category "error" -Message "detection rule is missing for $pkgName (aborting)"
 					$continue = $False
 					break
 				}
 				$installed = $False
-				$installed = Get-CMxInstallState -PackageName $pkgName -RuleType $detType -RuleData $detPath
+				$installed = getCmxInstallState -PackageName $pkgName -RuleType $detType -RuleData $detPath
 				if ($installed) {
-					Write-Log -Category "info" -Message "install state... $pkgName is INSTALLED"
+					writeLogFile -Category "info" -Message "install state... $pkgName is INSTALLED"
 				} else {
-					Write-Log -Category "info" -Message "install state... $pkgName is NOT INSTALLED"
-					$x = Invoke-CMxPackage -Name $pkgName -PackageType $pkgType -PayloadSource $pkgSrc -PayloadFile $pkgFile -PayloadArguments $pkgArgs
+					writeLogFile -Category "info" -Message "install state... $pkgName is NOT INSTALLED"
+					$x = invokeCmxPackage -Name $pkgName -PackageType $pkgType -PayloadSource $pkgSrc -PayloadFile $pkgFile -PayloadArguments $pkgArgs
 					if ($x -ne 0) {$continue = $False; break}
 				}
 				$pkgcount += 1
-				Write-Log -Category "info" -Message "----------------------------------------------------"
-				if (Test-PendingReboot) {
+				writeLogFile -Category "info" -Message "----------------------------------------------------"
+				if (testPendingReboot) {
 					if ($NoReboot) {
-						Write-Log -Category 'info' -Message 'a reboot is required - but NoReboot was requested.'
+						writeLogFile -Category 'info' -Message 'a reboot is required - but NoReboot was requested.'
 						Write-Warning "A reboot is required but has been suppressed."
 					} else {
-						Write-Log -Category 'info' -Message 'a reboot is requested.'
-						Invoke-CMxRestart -XmlFile $XmlFile
+						writeLogFile -Category 'info' -Message 'a reboot is requested.'
+						invokeCmxRestart -XmlFile $XmlFile
 						Write-Warning "A reboot is requested. Reboot now."
 						Restart-Computer -Force
 						break
@@ -169,14 +169,14 @@ function Invoke-CMBuild {
 		} # foreach
 
 		if (($pkgcount -gt 0) -and ($continue)) {
-			$null = Set-CMxRegKeys -DataSet $xmldata -Order "after"
+			$null = setCmxRegKeys -DataSet $xmldata -Order "after"
 		}
 	}
 
 	Write-Host "Processing finished at $(Get-Date)" -ForegroundColor Green
-	$RunTime2 = Get-TimeOffset -StartTime $RunTime1
-	Write-Log -Category "info" -Message "finished at $(Get-Date) - total runtime = $RunTime2"
-	if ((Test-PendingReboot) -and ($NoReboot)) {
+	$RunTime2 = getTimeOffset -StartTime $RunTime1
+	writeLogFile -Category "info" -Message "finished at $(Get-Date) - total runtime = $RunTime2"
+	if ((testPendingReboot) -and ($NoReboot)) {
 		Write-Host "A REBOOT is REQUIRED" -ForegroundColor Cyan
 	}
 	Stop-Transcript

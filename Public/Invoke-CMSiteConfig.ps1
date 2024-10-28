@@ -21,8 +21,9 @@ function Invoke-CMSiteConfig {
 		Invoke-CMSiteConfig -XmlFile .\cmsiteconfig.xml -Detailed -ShowMenu
 	.EXAMPLE
 		Invoke-CMSiteConfig -XmlFile .\cmsiteconfig.xml -Detailed -WhatIf
+	.LINK
+		https://github.com/Skatterbrainz/CMBuild/blob/master/Docs/Invoke-CMSiteConfig.md
 	.NOTES
-		1.0.7 - 11/21/2017 - David Stein
 		Read the associated XML to make sure the path and filename values
 		all match up like you need them to.
 	#>
@@ -37,13 +38,13 @@ function Invoke-CMSiteConfig {
 			[switch] $ShowMenu
 	)
 	$RunTime1 = Get-Date
-	Write-Host "CMSiteConfig $CMBuildVersion" -ForegroundColor Cyan
+	Write-Host "CMSiteConfig $CmBuildSettings['CMBuildVersion']" -ForegroundColor Cyan
 	$Script:CMxLogFile = $Script:CMConfigLogFile
 	try {Stop-Transcript -ErrorAction SilentlyContinue} catch {}
 	try {Start-Transcript -Path $Script:tsFile -Force} catch {}
 
 	Write-Host "------------------- BEGIN $(Get-Date) -------------------" -ForegroundColor Green
-	Write-Log -Category "info" -Message "Script version.... $ScriptVersion"
+	writeLogFile -Category "info" -Message "Script version.... $ScriptVersion"
 
 	Set-Location "$($env:USERPROFILE)\Documents"
 	if (-not(Test-Path $XmlFile)) {
@@ -53,12 +54,12 @@ function Invoke-CMSiteConfig {
 
 	Set-Location $env:USERPROFILE
 
-	[xml]$xmldata = Get-CMxConfigData -XmlFile $XmlFile
-	Write-Log -Category "info" -Message "----------------------------------------------------"
-	if ($xmldata.configuration.schemaversion -ge $SchemaVersion) {
-		Write-Log -Category "info" -Message "xml template schema version is valid"
+	[xml]$xmldata = getCmxConfigData -XmlFile $XmlFile
+	writeLogFile -Category "info" -Message "----------------------------------------------------"
+	if ($xmldata.configuration.schemaversion -ge $CmBuildSettings['SchemaVersion']) {
+		writeLogFile -Category "info" -Message "xml template schema version is valid"
 	} else {
-		Write-Log -Category "info" -Message "xml template schema version is invalid: $($xmldata.configuration.schemaversion)"
+		writeLogFile -Category "info" -Message "xml template schema version is invalid: $($xmldata.configuration.schemaversion)"
 		Write-Warning "The specified XML file is not using a current schema version"
 		break
 	}
@@ -67,7 +68,7 @@ function Invoke-CMSiteConfig {
 		Write-Warning "unable to load XML data from $xmlFile"
 		break
 	}
-	Write-Log -Category "info" -Message "site code = $sitecode"
+	writeLogFile -Category "info" -Message "site code = $sitecode"
 
 	if ($sitecode -eq "") {
 		Write-Warning "site code could not be obtained"
@@ -79,22 +80,22 @@ function Invoke-CMSiteConfig {
 	}
 
 	# Set the current location to be the site code.
-	Write-Log -Category "info" -Message "mounting CM Site provider_ $sitecode`:"
+	writeLogFile -Category "info" -Message "mounting CM Site provider_ $sitecode`:"
 	Set-Location "$sitecode`:" 
 
 	$Site = Get-CMSite -SiteCode $sitecode
-	Write-Log -Category "info" -Message "site version = $($site.Version)"
+	writeLogFile -Category "info" -Message "site version = $($site.Version)"
 
 	if ($ShowMenu) {
 		$controlset = $xmldata.configuration.cmsite.control.ci | Out-GridView -Title "Select Features to Run" -PassThru
 	} else {
 		$controlset = $xmldata.configuration.cmsite.control.ci | Where-Object {$_.use -eq '1'}
 	}
-	Invoke-CMSiteConfigProcess -ControlSet $controlSet -DataSet $xmldata
-	Write-Log -Category "info" -Message "---------------------------------------------------"
-	Write-Log -Category "info" -Message "restore working path to user profile"
+	invokeCMSiteConfigProcess -ControlSet $controlSet -DataSet $xmldata
+	writeLogFile -Category "info" -Message "---------------------------------------------------"
+	writeLogFile -Category "info" -Message "restore working path to user profile"
 	Set-Location -Path $env:USERPROFILE
 	Write-Host "---------------- COMPLETED $(Get-Date) ------------------" -ForegroundColor Green
-	Write-Log -Category info -Message "total runtime: $(Get-TimeOffset $Runtime1)"
+	writeLogFile -Category info -Message "total runtime: $(getTimeOffset $Runtime1)"
 	Stop-Transcript
 }

@@ -18,8 +18,8 @@ function Copy-CMBuildTemplate {
 		Copy-CMBuildTemplate -Type both -OutputPath '.\control'
 	.EXAMPLE
 		Copy-CMBuildTemplate -Type cmbuild -NoScrub
-	.NOTES
-		1.0.7 - 01/28/2018 - David Stein
+	.LINK
+		https://github.com/Skatterbrainz/CMBuild/blob/master/Docs/Copy-CMBuildTemplate.md
 	#>
 	param (
 		[parameter(Mandatory=$False, HelpMessage="CMBuild XML source template")]
@@ -55,9 +55,9 @@ function Copy-CMBuildTemplate {
 	# CMBUILD
 	if (($Type -eq 'cmbuild') -or ($Type -eq 'both')) {
 		$NewFile = "$OutputPath\cmbuild.xml"
-		[xml]$XmlData = Get-CMxTemplateData -Source $Source1
+		[xml]$XmlData = getCmxTemplateData -Source $Source1
 		if (!$NoScrub) {
-			[xml]$newData = Get-CMxTemplateScrubData -XmlData $XmlData
+			[xml]$newData = getCmxTemplateScrubData -XmlData $XmlData
 		}
 		else {
 			[xml]$newData = $XmlData
@@ -96,7 +96,7 @@ function Copy-CMBuildTemplate {
 		try {
 			Write-Verbose "scrubbing template data"
 			if (-not $NoScrub) {
-				[xml]$newdata = Get-CMSiteConfigCleanXML -XmlData $xmldata
+				[xml]$newdata = getCmSiteConfigCleanXML -XmlData $xmldata
 			} else {
 				[xml]$newdata = $xmldata
 			}
