@@ -1,7 +1,7 @@
 ---
 external help file: CMBuild-help.xml
 Module Name: CMBuild
-online version: 
+online version:
 schema: 2.0.0
 ---
 
@@ -13,8 +13,8 @@ SCCM site server installation script
 ## SYNTAX
 
 ```
-Invoke-CMBuild [-XmlFile] <String> [-NoCheck] [-NoReboot] [-Detailed] [-ShowMenu] [-Resume] [-WhatIf]
- [-Confirm]
+Invoke-CMBuild [-XmlFile] <String> [-NoCheck] [-NoReboot] [-Detailed] [-ShowMenu] [-Resume]
+ [-ProgressAction <ActionPreference>] [-WhatIf] [-Confirm] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -22,17 +22,17 @@ Yeah, what he said.
 
 ## EXAMPLES
 
-### -------------------------- EXAMPLE 1 --------------------------
+### EXAMPLE 1
 ```
 Invoke-CMBuild -XmlFile .\cmbuild.xml -Verbose
 ```
 
-### -------------------------- EXAMPLE 2 --------------------------
+### EXAMPLE 2
 ```
 Invoke-CMBuild -XmlFile .\cmbuild.xml -NoCheck -NoReboot -Detailed
 ```
 
-### -------------------------- EXAMPLE 3 --------------------------
+### EXAMPLE 3
 ```
 Invoke-CMBuild -XmlFile .\cmbuild.xml -ShowMenu -Verbose
 ```
@@ -45,7 +45,7 @@ Path and Name of XML input file
 ```yaml
 Type: String
 Parameter Sets: (All)
-Aliases: 
+Aliases:
 
 Required: True
 Position: 1
@@ -60,7 +60,7 @@ Skip platform validation restrictions
 ```yaml
 Type: SwitchParameter
 Parameter Sets: (All)
-Aliases: 
+Aliases:
 
 Required: False
 Position: Named
@@ -75,7 +75,7 @@ Suppress reboots until very end
 ```yaml
 Type: SwitchParameter
 Parameter Sets: (All)
-Aliases: 
+Aliases:
 
 Required: False
 Position: Named
@@ -90,7 +90,7 @@ Show verbose output
 ```yaml
 Type: SwitchParameter
 Parameter Sets: (All)
-Aliases: 
+Aliases:
 
 Required: False
 Position: Named
@@ -105,7 +105,7 @@ Choose package items to execute directly from GUI menu
 ```yaml
 Type: SwitchParameter
 Parameter Sets: (All)
-Aliases: 
+Aliases:
 
 Required: False
 Position: Named
@@ -120,7 +120,7 @@ Indicates a resumed process request
 ```yaml
 Type: SwitchParameter
 Parameter Sets: (All)
-Aliases: 
+Aliases:
 
 Required: False
 Position: Named
@@ -160,6 +160,24 @@ Accept pipeline input: False
 Accept wildcard characters: False
 ```
 
+### -ProgressAction
+{{ Fill ProgressAction Description }}
+
+```yaml
+Type: ActionPreference
+Parameter Sets: (All)
+Aliases: proga
+
+Required: False
+Position: Named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### CommonParameters
+This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable, -InformationAction, -InformationVariable, -OutVariable, -OutBuffer, -PipelineVariable, -Verbose, -WarningAction, and -WarningVariable. For more information, see [about_CommonParameters](http://go.microsoft.com/fwlink/?LinkID=113216).
+
 ## INPUTS
 
 ## OUTPUTS
@@ -171,4 +189,3 @@ Read the associated XML to make sure the path and filename values
 all match up like you need them to.
 
 ## RELATED LINKS
-

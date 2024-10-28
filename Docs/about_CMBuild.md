@@ -1,57 +1,22 @@
 ﻿# CMBuild
 ## about_CMBuild
 
-```
-ABOUT TOPIC NOTE:
-The first header of the about topic should be the topic name.
-The second header contains the lookup name used by the help system.
-
-IE:
-# Some Help Topic Name
-## SomeHelpTopicFileName
-
-This will be transformed into the text file
-as `about_SomeHelpTopicFileName`.
-Do not include file extensions.
-The second header should have no spaces.
-```              
-
 # SHORT DESCRIPTION
-{{ Short Description Placeholder }}
-
-```
-ABOUT TOPIC NOTE:
-About topics can be no longer than 80 characters wide when rendered to text.
-Any topics greater than 80 characters will be automatically wrapped.
-The generated about topic will be encoded UTF-8.
-```
+CMBuild is a module with functions intended for automating lab installations of Microsoft Configuration Manager.
 
 # LONG DESCRIPTION
-{{ Long Description Placeholder }}
+CMBuild is a module with functions intended for automating lab installations of Microsoft Configuration Manager.
+This includes dependencies, prerequisites, and configuration settings, including SQL Server, WSUS, MDT, ADK, SSMS, 
+Active Directory container and permissions, local users and permissions, site configuration settings and more.
 
-## Optional Subtopics
-{{ Optional Subtopic Placeholder }}
+## Copy-CMBuildTemplate
 
-# EXAMPLES
-{{ Code or descriptive examples of how to leverage the functions described. }}
+Clones the default XML templates for cmbuild and cmsiteconfig for use offline or publishing to a different online location.
 
-# NOTE
-{{ Note Placeholder - Additional information that a user needs to know.}}
+## Invoke-CMBuild
 
-# TROUBLESHOOTING NOTE
-{{ Troubleshooting Placeholder - Warns users of bugs}}
+This is the main function for processing the templates to build a Configuration Manager site.
 
-{{ Explains behavior that is likely to change with fixes }}
+## Invoke-CMSiteConfig
 
-# SEE ALSO
-{{ See also placeholder }}
-
-{{ You can also list related articles, blogs, and video URLs. }}
-
-# KEYWORDS
-{{List alternate names or titles for this topic that readers might use.}}
-
-- {{ Keyword Placeholder }}
-- {{ Keyword Placeholder }}
-- {{ Keyword Placeholder }}
-- {{ Keyword Placeholder }}    
+This configures the SCCM site after the server platform is prepared.
